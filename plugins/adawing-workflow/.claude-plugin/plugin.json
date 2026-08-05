@@ -1,0 +1,9 @@
+{
+  "name": "adawing-workflow",
+  "description": "代码任务执行工作流：Spec→Plan→Preview→Build→Simplify→Verify→Finish 七阶段纪律，强制过程文档与增量验证。",
+  "version": "1.0.0",
+  "author": {
+    "name": "adaw"
+  },
+  "license": "MIT"
+}

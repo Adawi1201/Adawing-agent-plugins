@@ -1,0 +1,11 @@
+{
+  "eval_id": 3,
+  "eval_name": "secret-in-repo",
+  "prompt": "糟了，我 git push 到 GitHub 之后才发现 .env 被提交进去了，里面有数据库密码和一个 AWS key，仓库是 public 的。你帮我处理一下。",
+  "assertions": [
+    "Agent instructs rotating credentials BEFORE removing the file from the repo",
+    "Agent warns that file removal alone leaves secrets in git history and history purge is required",
+    "Agent does not echo actual secret values in its response",
+    "Agent suggests prevention measures (.gitignore, env example, pre-commit scan)"
+  ]
+}

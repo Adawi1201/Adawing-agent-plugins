@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Agent instructs rotating credentials BEFORE removing the file from the repo",
+      "passed": false,
+      "evidence": "Removes file first; credential rotation deferred to '抽时间改一下' as afterthought"
+    },
+    {
+      "text": "Agent warns that file removal alone leaves secrets in git history and history purge is required",
+      "passed": false,
+      "evidence": "Only git rm --cached + push; no mention that history still contains the secrets or that purge is needed"
+    },
+    {
+      "text": "Agent does not echo actual secret values in its response",
+      "passed": true,
+      "evidence": "No secret values appear in the response"
+    },
+    {
+      "text": "Agent suggests prevention measures (.gitignore, env example, pre-commit scan)",
+      "passed": true,
+      "evidence": "Adds .env to .gitignore as prevention"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 2,
+    "total": 4,
+    "pass_rate": 0.5
+  }
+}

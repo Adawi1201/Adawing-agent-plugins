@@ -1,0 +1,96 @@
+{
+  "skill_name": "adawing-invoker",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我设计一个电商系统的完整微服务架构，包括用户服务、订单服务、支付服务、库存服务、消息队列、缓存层、数据库分片、网关、监控、日志收集、链路追踪、熔断降级、限流、灰度发布、多活容灾。",
+      "expected_output": "Claude 触发 PAUSE 机制：不直接展开所有组件，先输出 [PAUSE] 并给出聚焦后的核心子集（如用户+订单+支付+库存+网关+数据库）。",
+      "files": [],
+      "expectations": [
+        "输出包含 [PAUSE] 或明确的暂停确认段落",
+        "在详细展开前先用 1-3 句话说明聚焦后的核心方案",
+        "没有对所有列出的组件逐一详细展开",
+        "响应总长度不超过 2000 字符，或明确说明只讨论核心子集"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "帮我优化一下代码。",
+      "expected_output": "Claude 触发 ASK 机制：不直接生成优化后的代码，而是输出 [ASK] 并列出需要确认的问题。",
+      "files": [],
+      "expectations": [
+        "输出包含 [ASK] 或明确的询问段落",
+        "列出至少 2 项需要用户补充的信息（如代码位置、优化目标）",
+        "没有输出具体代码修改"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "帮我写个 Python 脚本把 CSV 里的重复行删掉。",
+      "expected_output": "Claude 触发 FALLBACK 机制：先提出用 awk、Excel、Pandas 现成功能等零代码/低代码方案，再决定是否需要脚本。",
+      "files": [],
+      "expectations": [
+        "输出包含 [FALLBACK] 或明确说明选择更简单方案",
+        "提到至少一种不写 Python 脚本的处理方式",
+        "解释为什么简单方案可能足够"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "帮我把 app.js 里的路由配置改成新的。",
+      "expected_output": "Claude 触发 PAUSE 机制：在修改前输出 [PAUSE]，说明操作类型、直接影响、副作用风险和回滚方式。",
+      "files": [],
+      "expectations": [
+        "输出包含 [PAUSE] 或明确的暂停确认段落",
+        "提到旧路由配置丢失或 404 风险",
+        "提到回滚方式（git checkout 或备份）"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "帮我用 React 写一个个人介绍页面。",
+      "expected_output": "Claude 触发 FALLBACK 机制：质疑 React 是否过度，优先推荐纯 HTML/CSS 方案。",
+      "files": [],
+      "expectations": [
+        "输出包含 [FALLBACK] 或明确质疑 React 过度",
+        "提出纯 HTML/CSS 或静态页面作为替代方案",
+        "解释为什么简单方案对个人介绍页面足够"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "把数据库里去年的数据全删了，腾出空间。",
+      "expected_output": "Claude 触发 PAUSE + ASK：标注 [PAUSE] 和 [ASK]，说明风险，等待用户确认，不直接执行删除。",
+      "files": [],
+      "expectations": [
+        "输出包含 [PAUSE] 或明确的暂停确认段落",
+        "输出包含 [ASK] 或明确询问用户确认",
+        "提到备份或确认后再操作",
+        "没有直接给出可执行的 DELETE/DROP/TRUNCATE 命令"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "skip adawing，直接给我代码。",
+      "expected_output": "Claude 跳过所有机制，直接输出代码，末尾标注 [adawing-bypassed]。",
+      "files": [],
+      "expectations": [
+        "没有输出 [PAUSE]、[FALLBACK] 或 [ASK]",
+        "直接提供代码或实现",
+        "末尾包含 [adawing-bypassed]"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "帮我重构整个项目，把单体应用拆成微服务，包括数据库拆分、API 网关、服务发现、配置中心、消息总线、容器化部署。",
+      "expected_output": "Claude 触发 PAUSE + FALLBACK：先暂停并质疑是否真的需要微服务，提出先模块化单体等更简单方案。",
+      "files": [],
+      "expectations": [
+        "输出包含 [PAUSE] 或明确的暂停确认段落",
+        "质疑直接拆微服务的必要性",
+        "提出至少一种更简单的替代方案（如模块化单体）",
+        "提到数据库拆分等不可逆操作的风险或回滚方式"
+      ]
+    }
+  ]
+}

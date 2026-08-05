@@ -1,0 +1,9 @@
+{
+  "name": "adawing-guidance",
+  "description": "AGENTS.md 初始化生成器：扫描项目产出缓存友好、稳定度排序、无冗余的项目级提示词。",
+  "version": "1.0.0",
+  "author": {
+    "name": "adaw"
+  },
+  "license": "MIT"
+}

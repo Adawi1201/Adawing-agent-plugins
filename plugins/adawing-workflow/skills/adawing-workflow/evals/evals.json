@@ -1,0 +1,35 @@
+{
+  "skill_name": "adawing-workflow",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "在现有 Vue 2 后台管理页面的用户列表中新增一列'注册时间'，字段来自后端 user.register_time，格式为 YYYY-MM-DD HH:mm。请按完整工作流实现，项目根目录已存在。",
+      "expected_output": "产出 docs/superpowers/specs/、docs/superpowers/plans/、docs/superpowers/previews/ 下的 HTML 预览（展示表格列变化），并在 Build 前明确询问用户确认 Preview。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "后端订单列表接口的查询条件从'按创建时间'改为'按支付时间'，其他逻辑不变。请按完整工作流处理。",
+      "expected_output": "产出 spec 和 plan；因是纯后端逻辑改动，可向用户说明后省略 Preview，但必须产出 verify 报告并标注为草稿态（待手动测试）。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "用户反馈登录按钮点击后没有反应，帮我 debug。项目是一个 Spring Boot + Vue 2 的后台系统。",
+      "expected_output": "进入 MODE_DEBUG，调用 superpowers:systematic-debugging，产出 docs/superpowers/reviews/debug-YYYY-MM-DD-login.md，不直接修改代码。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "修复一个已定位的 bug：用户头像上传后仍显示旧图片（缓存未失效）。请按最小修改修复并验证。",
+      "expected_output": "进入 MODE_FIX，说明测试策略，实施最小修复，产出 verify 报告草稿态，等待用户手动测试后才能标记完成。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "这个需求很简单，就是把用户详情页的标签'用户名'改成'账号名称'，不用写 spec 和 plan 了吧，直接改。",
+      "expected_output": "坚持完整工作流，解释为什么即使简单改动也需要 spec/plan/preview；产出 preview HTML 并经用户确认后才 Build。",
+      "files": []
+    }
+  ]
+}

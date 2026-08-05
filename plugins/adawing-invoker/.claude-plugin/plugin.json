@@ -1,0 +1,9 @@
+{
+  "name": "adawing-invoker",
+  "description": "代码任务决策门控：PAUSE / FALLBACK / ASK 三条机械规则，防止在信息不足、范围过大或高风险时直接执行。",
+  "version": "1.0.0",
+  "author": {
+    "name": "adaw"
+  },
+  "license": "MIT"
+}

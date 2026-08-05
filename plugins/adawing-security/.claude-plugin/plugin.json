@@ -1,0 +1,9 @@
+{
+  "name": "adawing-security",
+  "description": "Agent 安全行为规范：三色风险分级、不可逆操作门控、生产环境准则、密钥泄漏检测与网络隔离。",
+  "version": "1.0.0",
+  "author": {
+    "name": "adaw"
+  },
+  "license": "MIT"
+}
