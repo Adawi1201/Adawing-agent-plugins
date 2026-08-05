@@ -1,6 +1,6 @@
 # adawing-plugins
 
-AdaWing 出品的 Claude Code skill 插件集，面向 AI coding agent 的治理、安全与工程实践。一个 marketplace 托管四个可独立安装的插件。
+AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与工程实践。现已支持在 Claude Code 中以一个 marketplace 托管四个可独立安装的插件。
 
 ## 插件
 

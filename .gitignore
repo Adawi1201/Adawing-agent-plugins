@@ -5,3 +5,7 @@
 *.swp
 *~
 Thumbs.db
+
+# Intellij IDEA
+.idea
+
