@@ -38,7 +38,7 @@ adawing-security/
 本插件通过 `adawing` marketplace 分发：
 
 ```
-/plugin marketplace add <marketplace-repo>
+/plugin marketplace add Adawi1201/Adawing-agent-plugins
 /plugin install adawing-security@adawing
 ```
 

@@ -18,7 +18,7 @@ AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与
 在 Claude Code 中添加本 marketplace：
 
 ```
-/plugin marketplace add <marketplace-repo>
+/plugin marketplace add Adawi1201/Adawing-agent-plugins
 ```
 
 然后按需安装单个插件：
@@ -29,6 +29,23 @@ AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与
 /plugin install adawing-security@adawing
 /plugin install adawing-guidance@adawing
 ```
+
+命令行等价写法（`--scope user` 全局安装）：
+
+```
+claude plugin marketplace add Adawi1201/Adawing-agent-plugins
+claude plugin install adawing-invoker@adawing --scope user
+```
+
+## 更新
+
+插件有更新后，拉取最新 marketplace 缓存：
+
+```
+claude plugin marketplace update adawing
+```
+
+必要时重装受影响的插件即可。卸载：`claude plugin uninstall <name>@adawing`。
 
 ## 目录结构
 

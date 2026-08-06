@@ -48,7 +48,7 @@ adawing-invoker/
 本插件通过 `adawing` marketplace 分发。在 Claude Code 中添加 marketplace 后安装：
 
 ```
-/plugin marketplace add <marketplace-repo>
+/plugin marketplace add Adawi1201/Adawing-agent-plugins
 /plugin install adawing-invoker@adawing
 ```
 
