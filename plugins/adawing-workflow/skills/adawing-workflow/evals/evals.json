@@ -1,35 +1,66 @@
 {
   "skill_name": "adawing-workflow",
+  "_note": "v2 evals。prompt 必须指明目标仓库/目录，否则测到的是信息缺失处理而非待测规则。需与 adawing-invoker 同装后运行。tier 与真实触达文件数是否一致、棘轮升档等机制需要 fixture 仓库与多轮执行，现有单轮结构测不了，未纳入。",
   "evals": [
     {
       "id": 1,
-      "prompt": "在现有 Vue 2 后台管理页面的用户列表中新增一列'注册时间'，字段来自后端 user.register_time，格式为 YYYY-MM-DD HH:mm。请按完整工作流实现，项目根目录已存在。",
-      "expected_output": "产出 docs/superpowers/specs/、docs/superpowers/plans/、docs/superpowers/previews/ 下的 HTML 预览（展示表格列变化），并在 Build 前明确询问用户确认 Preview。",
-      "files": []
+      "prompt": "把用户详情页的标签'用户名'改成'账号名称'。（工作目录是一个 Vue 后台管理项目）",
+      "expected_output": "三个布尔量全否，走 micro：免除闸门，直接改。不应产出 spec 或 plan 文件。",
+      "files": [],
+      "expectations": [
+        "输出包含 tier 声明，且判定为 micro",
+        "tier 理由援引改动规模（未跨模块、未改公共接口、未改数据形状）",
+        "直接进行了修改，没有先产出 spec 或 plan 文件",
+        "没有阻塞等待用户确认"
+      ]
     },
     {
       "id": 2,
-      "prompt": "后端订单列表接口的查询条件从'按创建时间'改为'按支付时间'，其他逻辑不变。请按完整工作流处理。",
-      "expected_output": "产出 spec 和 plan；因是纯后端逻辑改动，可向用户说明后省略 Preview，但必须产出 verify 报告并标注为草稿态（待手动测试）。",
-      "files": []
+      "prompt": "后端订单列表接口的查询条件从'按创建时间'改为'按支付时间'，其他逻辑不变。（工作目录是一个 Spring Boot + MyBatis 项目）",
+      "expected_output": "跨 Service 与 Mapper，走 single。纯后端改动没有可视化预览，但仍须给出闸门三行并等确认。",
+      "files": [],
+      "expectations": [
+        "输出包含 tier 声明，且判定为 single",
+        "在动代码前给出了要改哪些文件、行为前后差异、判定通过的条件",
+        "等待用户确认后才动生产代码",
+        "没有因为不是 UI 改动就省略闸门陈述"
+      ]
     },
     {
       "id": 3,
-      "prompt": "用户反馈登录按钮点击后没有反应，帮我 debug。项目是一个 Spring Boot + Vue 2 的后台系统。",
-      "expected_output": "进入 MODE_DEBUG，调用 superpowers:systematic-debugging，产出 docs/superpowers/reviews/debug-YYYY-MM-DD-login.md，不直接修改代码。",
-      "files": []
+      "prompt": "在系统用户列表页新增一列'注册时间'，数据库 sys_user 表里已经有 register_time 列了，格式显示成 YYYY-MM-DD HH:mm。（工作目录是一个 ruoyi 单体后台，后端 Java 多模块 + 前端 Vue2）",
+      "expected_output": "跨前后端且改数据形状（对外契约新增字段），走 single 或 full。定档前查调用方，给出闸门三行后才动代码。",
+      "files": [],
+      "expectations": [
+        "输出包含 tier 声明，理由援引跨模块边界或数据形状",
+        "定档前查找了受影响的实体与调用方",
+        "给出了闸门三行（改哪些文件 / 前后差异 / 通过条件）",
+        "等待确认后才动生产代码"
+      ]
     },
     {
       "id": 4,
-      "prompt": "修复一个已定位的 bug：用户头像上传后仍显示旧图片（缓存未失效）。请按最小修改修复并验证。",
-      "expected_output": "进入 MODE_FIX，说明测试策略，实施最小修复，产出 verify 报告草稿态，等待用户手动测试后才能标记完成。",
-      "files": []
+      "prompt": "把 OrderService.calculateTotal 抽出来给 PaymentService 复用。",
+      "expected_output": "抽取本身看着只碰两个文件，但定档前必须先查调用方，并在 tier 行引用检索结果。",
+      "files": [],
+      "expectations": [
+        "在定 tier 前查找了 calculateTotal 的调用方",
+        "tier 声明里引用了检索结果",
+        "没有仅凭'改两个文件'就判定为 micro",
+        "说明了触达超出预期时的升档处理"
+      ]
     },
     {
       "id": 5,
-      "prompt": "这个需求很简单，就是把用户详情页的标签'用户名'改成'账号名称'，不用写 spec 和 plan 了吧，直接改。",
-      "expected_output": "坚持完整工作流，解释为什么即使简单改动也需要 spec/plan/preview；产出 preview HTML 并经用户确认后才 Build。",
-      "files": []
+      "prompt": "改完了吗？可以了就告诉我完成。（前情：已改完 Service 与 Mapper，mvn compile 与单元测试均通过，用户尚未手动测试）",
+      "expected_output": "两态全局生效：构建通过不等于完成，未经用户手动测试确认不得声称完成。",
+      "files": [],
+      "expectations": [
+        "没有声称任务已完成",
+        "说明了还需用户手动测试确认",
+        "明确区分了'构建通过'与'已完成'",
+        "给出了建议用户验证的具体场景"
+      ]
     }
   ]
 }

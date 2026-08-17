@@ -5,18 +5,18 @@
   },
   "metadata": {
     "description": "AdaWing 出品的 Claude Code skill 插件集：面向 AI coding agent 的决策门控、执行工作流、安全规范与项目提示词生成。四个插件可独立安装，也可组合使用。",
-    "version": "1.0.0"
+    "version": "1.2.0"
   },
   "plugins": [
     {
       "name": "adawing-invoker",
       "source": "./plugins/adawing-invoker",
-      "description": "代码任务决策门控：PAUSE / FALLBACK / ASK 三条机械规则，防止在信息不足、范围过大或高风险时直接执行。"
+      "description": "动手前的判断纪律：歧义门 + self / discuss 两档校准，默认不阻塞，只在用户消息确有多种解释时停下。"
     },
     {
       "name": "adawing-workflow",
       "source": "./plugins/adawing-workflow",
-      "description": "代码任务执行工作流：Spec→Plan→Preview→Build→Simplify→Verify→Finish 七阶段纪律，强制过程文档与增量验证。"
+      "description": "按改动规模分档的执行流程：micro / single / full 三档跑不同阶段，闸门与过程文档随规模伸缩。建议与 adawing-invoker 同装。"
     },
     {
       "name": "adawing-security",

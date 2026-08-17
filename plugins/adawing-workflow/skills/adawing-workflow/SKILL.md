@@ -1,164 +1,161 @@
 ---
 name: adawing-workflow
-description: 代码任务的执行工作流。当范围、风险、方案已经澄清、准备正式动手写代码时使用，尤其适用于遵循 adawing 治理模型的项目。当用户期望 Spec→Plan→Preview→Build→Simplify→Verify→Finish 的阶段纪律、过程文档产出和增量验证时触发。承接 adawing-invoker 的决策结果，将需求拆解为可验证的阶段。
+description: 代码任务的执行工作流。按改动规模路由 micro / single / full 三档，各档跑不同阶段：维护类小改动直接干，功能类改动走 plan 与闸门，大改造才跑完整 spec 与 verify。建议与 adawing-invoker 同装。
 ---
 
-# adawing-workflow —— 代码任务执行工作流
+# adawing-workflow —— 按规模分档的执行流程
 
-> 承接 `adawing-invoker` 的决策结果，将需求拆解为可验证的阶段，强制产出过程文档，确保每一步都有用户确认或自动化验证。
+> 维护与开发交替进行，流程强度应当随之变化。
+> 规模小就少跑阶段，规模大才值得完整留档。不因流程完整而给琐碎任务加税。
 
 ## 核心原则
 
-代码修改任务一旦决定执行，必须走完 **Spec → Plan → Preview → Build → Simplify → Verify → Finish** 七个阶段。不因任务简单而跳过任何环节。每个阶段产出必须存在，且阶段之间以用户确认或自动化验证为闸门。
+代码任务按改动规模分为 **micro / single / full** 三档，各档跑不同阶段。档位不由任务"看起来重不重"决定，而由三个布尔量决定。定档前必须先查调用方，不许凭印象。
 
-## 与 `adawing-invoker` 的关系
+`micro` 与 `single` 的全部要求都在本文件内。定到 `full` 时再读 [references/full-tier.md](references/full-tier.md) —— 那里是 spec / plan 文件 / prev / verify 的细则，前两档不需要。
 
-- `adawing-invoker` 负责**决策**：PAUSE / FALLBACK / ASK。它在任务入口判断该不该做、用什么最小方案做。
-- `adawing-workflow` 负责**执行**：在决策已经明确后，按固定阶段推进任务。
-- 如果进入本 workflow 后仍然发现需求不清、范围过大、风险未授权，**立即停止当前阶段，回退到 `adawing-invoker`**，不要在本 skill 中重复实现 PAUSE / FALLBACK / ASK 的逻辑。
+## 与其他 skill 的关系
 
-## 工作流总览
+本 skill 可单装，以下都是**软依赖** —— 对方未装时本 skill 不失效，只是覆盖面变窄。
+
+| 对方 | 边界 | 对方未装时 |
+|---|---|---|
+| `adawing-invoker` | 它管歧义：该怎么做、是否需要先问 | 照常分档，不代管歧义判定 |
+| `superpowers` | `full` 档的 spec / plan 借用它的 skill | `full` 档自行写 spec / plan，格式见 references |
+
+与 `adawing-invoker` 判据正交：无歧义的大重构走 `self` + `full`，指令模糊的一行改动走 `PAUSE` + `micro`。引用对方时只援引边界，不复述对方的内部机制 —— 对方改版时本 skill 不必跟着改。
+
+## 流程总览
 
 ```dot
 digraph adawing_workflow {
-  "Spec" -> "Plan" -> "Preview" -> "Build" -> "Simplify" -> "Verify" -> "Finish"
-  "Preview" -> "Build" [label="用户确认", style=dashed]
-  "Verify" -> "Finish" [label="用户手动测试通过", style=dashed]
-  "任何阶段发现不确定" -> "adawing-invoker" [label="回退", style=dashed]
+  "定档（查调用方）" -> "micro" -> "build"
+  "定档（查调用方）" -> "single" -> "闸门" -> "build" -> "review"
+  "定档（查调用方）" -> "full" -> "spec" -> "plan" -> "prev" -> "build" -> "review" -> "verify"
+  "干活中触达超出定档依据" -> "就地升档" [style=dashed]
 }
 ```
 
-## 阶段详解
+---
 
-### 阶段 1：Spec（需求分析）
+## 定档
 
-- **必需子 skill：** `superpowers:brainstorming`
-- **产出：** `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
-- **强制内容：**
-  - 明确 Non-Goals（不做范围）
-  - 至少 3 个风险假设
-  - 数据表影响（涉及哪些表/字段）
-  - 前后端联动范围（API 文件 + views 页面）
-  - 金额字段必须注明精度与单位
-  - 审批流改动必须画出状态流转图
-- **记忆反馈：** `pause-on-uncertainty` — 分析中出现连续 2 次以上“可能/也许/大概”时，停止分析并提交未确认清单给用户。
+### 判据（三个布尔量，不是文件计数）
 
-### 阶段 2：Plan（实施计划）
+- 是否跨模块边界
+- 是否改公共接口
+- 是否改数据形状
 
-- **必需子 skill：** `superpowers:writing-plans`
-- **产出：** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
-- **强制内容：**
-  - 每个任务列出目标文件（前后端双端）
-  - 每个任务列出验证方式
-  - 每个任务列出回滚步骤
-  - 引用 Preview 文件路径（见 Phase 3）
-- **记忆反馈：** `workflow-spec-plan-preview-set` — Plan 之后必须进入 Preview，不可直接 Build。
+全否 → `micro`；命中一条 → `single`；命中两条以上，或需求本身包含多个子功能 → `full`。
 
-### 阶段 3：Preview（效果预览）—— 强制不可跳过
+### 必须执行的动作
 
-- **适用范围：** 任何涉及 UI/行为变更的需求，无论多简单。
-- **UI 改动：** 产出 `docs/superpowers/previews/YYYY-MM-DD-prev-<topic>/index.html`
-- **逻辑/后端改动：** 产出 `docs/superpowers/previews/YYYY-MM-DD-prev-<topic>/flow.html`
-- **硬顺序：**
-  1. 产出 Preview 后立即向用户展示并询问是否确认。
-  2. **收到用户明确“确认”前，禁止调用 Edit/Write 修改生产代码，禁止调用编译/构建工具。**
-- **例外：** 纯后端逻辑改动（如仅改 SQL 查询条件）可酌情省略，但需向用户说明并获认可。
-- **记忆反馈：** `preview-mandatory`
+1. **先查一次调用方**，并在 tier 行里引用结果。优先 codegraph（`codegraph_explore`，仅当项目已建 `.codegraph/` 索引），否则 Grep/Glob
+2. 输出 tier 行与阶段行，各一行，不展开论证
+3. 理由只能援引规模
 
-### 阶段 4：Build（编码实现）
+> "要碰几个文件"恰恰是任务开始时的未知量 —— 抽一个函数看着是两个文件，调用方可能有四十处。
 
-- **必需子 skill：** `superpowers:subagent-driven-development`（推荐）或 `superpowers:executing-plans`
-- **强制行为：**
-  - 严格按 Plan 的 Step 顺序执行
-  - 每改动一个文件，立即运行相关增量测试/编译
-  - 禁止批量修改未在 Plan 中列出的文件
-  - 禁止顺手重构无关代码、禁止批量格式化
-- **工具约束：** 必须先使用 Codegraph MCP 工具扫描项目上下文，再动手读取具体文件。
-  - 列出文件 → `codegraph_files`
-  - 查看符号定义与调用链 → `codegraph_explore`
-  - 查找调用方 → `codegraph_callers`
-  - 评估修改影响 → `codegraph_impact`
-- **记忆反馈：** `codegraph-usage-feedback`
+### 输出格式
 
-### 阶段 5：Simplify（简化审查）
-
-- 删除未使用的导入、变量、函数
-- 合并重复的代码块
-- 降低嵌套层级（提前返回替代深层 if-else）
-- 消除不必要的抽象
-
-### 阶段 6：Verify（全量验证）—— 两态管理
-
-- **必需子 skill：** `superpowers:verification-before-completion`
-- **产出：** `docs/superpowers/verify/YYYY-MM-DD-<topic>.md`
-- **检查项：**
-  - Lint: 无 Error
-  - Test: 新增/修改测试全绿
-  - Build: 编译/打包成功
-  - Simplify: 通过
-- **状态机：**
-  1. **草稿态**：代码修改 + 构建通过后，产出 Verify 报告，状态标注为 **“待用户本地手动测试确认”**。此时严禁声称任务已完成。
-  2. **终态**：用户逐项完成测试清单并反馈“通过”后，更新状态为 **“已完成”**。
-- **记忆反馈：** `verify-after-manual-test`
-
-### 阶段 7：Finish（收尾）
-
-- **必需子 skill：** `superpowers:finishing-a-development-branch`
-- 测试未通过时不得呈现选项，必须先修复。
-- 提交信息遵循 `type(scope): short description` 格式，详细说明放 body，不要包含 issue/P0 编号，不要附加 AI 署名。
-- 涉及 Filter、认证、部署健康检查等运行时行为，必须启动应用实际验证。
-- **记忆反馈：** `git-commit-style-constraint`
-
-## 模式映射
-
-| 任务类型 | 模式 | 特殊路径 |
-|----------|------|----------|
-| 新功能/需求变更/性能优化 | MODE_REQ | 完整 7 阶段 |
-| Bug/测试失败/异常行为 | MODE_DEBUG | `superpowers:systematic-debugging` |
-| 根因明确的修复 | MODE_FIX | TDD → Verify |
-| 处理 PR/Code Review 反馈 | MODE_REVIEW | `superpowers:receiving-code-review` |
-| 安全漏洞 | MODE_VULN | PoC → Patch → Audit |
-
-## 工具链协议
-
-- **批量读取：** 使用 Read 一次性读取相关文件（如 Service + Mapper + Test）
-- **精准修改：** 使用 Edit 行级替换；大段重构使用 Write 但必须先 Read 确认
-- **搜索定位：** 优先使用 Codegraph MCP 工具，其次 Grep/Glob
-- **增量验证：** 每改一个文件，立即运行相关测试
-- **全量验证：** 阶段结束前必须运行完整 test + lint + build
-- **危险命令二次确认：** git push, rm -rf, DROP, DELETE（无 WHERE）等，确认格式：“即将执行 `<command>`，确认请输入 '确认' 继续。”
-
-## 过程文档约定
-
-过程文档统一放在 `docs/superpowers/`，不提交 git，仅在用户主动要求时提交：
-
-```
-docs/superpowers/
-specs/     — 需求设计
-plans/     — 实施计划
-previews/  — 预览 HTML
-verify/    — 验证报告
-reviews/   — 审查记录
+```markdown
+[TIER: single] <规模理由，引用检索结果>
+阶段：plan → build → review
 ```
 
-## 项目记忆反馈索引
+### 棘轮
 
-| 记忆 | 应用阶段 |
-|------|----------|
-| follow-full-workflow | 全部 — 任何代码任务必须完整执行 7 阶段 |
-| workflow-spec-plan-preview-set | Spec/Plan/Preview — Plan 后必须 Preview |
-| preview-mandatory | Preview — UI/行为变更必须产出 HTML 预览 |
-| pause-on-uncertainty | Spec/Plan — 不确定时回退到 invoker |
-| verify-after-manual-test | Verify — 用户手动测试后才能标记完成 |
-| codegraph-usage-feedback | Build — 强制使用 Codegraph MCP |
-| git-commit-style-constraint | Finish — 提交格式与运行时验证 |
+干活中发现实际触达超出定档依据时，就地升档并补做缺失阶段，或明确说明为何豁免。升到 `full` 时先读 `references/full-tier.md`。
 
-## 危险信号 —— 停止并回退到 `adawing-invoker`
+> 不许靠分批改动规避升档。
 
-- 阶段中发现需求还有多种解释
-- 用户说“简单改一下”但影响范围未明确
-- 准备执行删除/覆盖/配置变更前未说明风险
-- 想跳过 Preview 或 Verify
-- 连续出现“可能/也许/大概”
+### 禁止行为
 
-这些信号意味着决策层尚未充分澄清，必须回退到 `adawing-invoker`。
+写出 `[TIER: single] 因为需求不清` 是格式错误 —— 那是 `adawing-invoker` 的歧义门在管的事。
+
+---
+
+## 各档阶段
+
+| 档 | 阶段 | 过程文档 |
+|---|---|---|
+| `micro` | (prev 按需) → build | 无 |
+| `single` | plan → (prev 按需) → build → review/simplify | 行内 |
+| `full` | spec → plan → prev → build → review/simplify → verify | 见 references |
+
+**plan（`single` 行内即可）：** 目标文件、验证方式、回滚步骤，外加一行验收条件与一行 Non-Goals。不出文件。
+
+**build（全档）：** 按 plan 顺序执行，每改一个文件立即跑相关增量验证。不批量修改计划外文件，不顺手重构无关代码，不批量格式化。
+
+**review / simplify（`single` 起）：** 删除未使用的导入与变量、合并重复代码、用提前返回降低嵌套、消除不必要的抽象。
+
+**prev（按需）：** 只是可视化结果预览。`micro` 默认不出，UI 改动面较大时出；`single` 按需。产出 `docs/superpowers/previews/YYYY-MM-DD-<topic>/index.html`，同一页分区呈现。
+
+**verify（`micro` / `single`）：** 口头一行说明 lint / test / build 结果即可，不出报告文件。
+
+---
+
+## 闸门 —— 动手前给一次可否决的陈述
+
+### 适用范围
+
+`single` 与 `full` 档强制；`micro` 档免除，前提是改动可逆。
+
+**可逆 = 改动以 diff 形式落在 git 跟踪的文件上。** 删文件、覆盖非跟踪文件、写数据库、跑迁移都不算 —— 这类改动即使规模是 `micro` 也要走闸门。
+
+### 必须执行的动作
+
+动生产代码前给出三行，一行一条：
+
+1. 要改哪些文件
+2. 行为的前后差异
+3. 判定通过的条件
+
+**三行就是三行**，不附加风险分析与备选方案讨论。收到用户确认前，不动生产代码。
+
+> 闸门是行为约束，不绑定产出物。纯后端改动没有可视化预览，但一样要有这三行 —— 否则第一个可干预点会落在代码已经改完之后。
+
+---
+
+## 全局规则 —— 不随档位变化
+
+**两态：** 构建通过不等于完成。未经用户手动测试确认，不得声称任务已完成。这条对三个档都生效。
+
+**运行时验证：** 涉及 Filter、认证、部署健康检查等运行时行为，必须启动应用实际验证，不能只靠编译通过。
+
+**提交约定：** 仅当用户要求提交时生效。格式 `type(scope): short description`，详细说明放 body，不带 issue 编号，不加 AI 署名。测试未通过时不呈现收尾选项，先修复。分支收尾等用户主动提起。
+
+**过程文档：** 统一放 `docs/superpowers/`，不提交 git，除非用户要求。
+
+---
+
+## 与 superpowers 的关系
+
+`micro` 与 `single` 档**取代** `superpowers:brainstorming` 的设计批准闸门 —— 本档的闸门三行即为设计陈述（装了 `adawing-invoker` 时，其 `EVALUATION` 的默认动作同样够用），不再走完整问答流程。
+
+> 不写明这一条，两档会被 brainstorming 的 HARD-GATE 压回完整流程。
+
+`full` 档才拉 brainstorming，细则见 references。任务类型对应的前置 skill：
+
+| 任务类型 | 前置 skill |
+|---|---|
+| bug / 测试失败 / 异常行为 | `superpowers:systematic-debugging` |
+| PR / code review 反馈 | `superpowers:receiving-code-review` |
+| 新功能（full 档） | `superpowers:brainstorming` → `superpowers:writing-plans` |
+| 安全漏洞 | PoC → Patch → Audit |
+
+---
+
+## 硬规则
+
+只有这三条是硬规则，evals 可判：
+
+1. `single` 与 `full` 档在动生产代码前给出了闸门陈述且等待确认
+2. tier 声明的理由援引规模，不援引歧义
+3. 无验证证据时不声称完成
+
+其余是指引。规则太多容易沉重，太少容易失控 —— 只有能被驳倒或能被核验的才写成硬规则。
+
+## 附属资源
+
+- `references/full-tier.md` —— `full` 档阶段细则（spec / plan 文件 / prev 强制 / verify 报告 / 过程文档路径）。仅定档为 `full` 或就地升档到 `full` 时读。
