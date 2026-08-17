@@ -9,3 +9,7 @@ Thumbs.db
 # Intellij IDEA
 .idea
 
+# Agent index
+CLAUDE.md
+AGENTS.md
+

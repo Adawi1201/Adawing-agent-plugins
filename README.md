@@ -6,12 +6,12 @@ AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与
 
 | 插件 | 职责 | 触发时机 |
 |---|---|---|
-| [`adawing-invoker`](plugins/adawing-invoker) | 代码任务**决策门控**（PAUSE / FALLBACK / ASK） | 任务入口：判断做不做、用什么最小方案做 |
-| [`adawing-workflow`](plugins/adawing-workflow) | 代码任务**执行工作流**（Spec→…→Finish 七阶段） | 决策已明确、正式动手写代码 |
+| [`adawing-invoker`](plugins/adawing-invoker) | 动手前的**判断纪律**（歧义门 + self / discuss） | 任务入口：判断该怎么做，是否需要先问 |
+| [`adawing-workflow`](plugins/adawing-workflow) | 按规模分档的**执行流程**（micro / single / full） | 正式动手写代码，按改动规模决定跑哪些阶段 |
 | [`adawing-security`](plugins/adawing-security) | Agent **安全行为规范**（三色风险分级 + 门控） | 涉及命令/删除/部署/密钥/生产环境 |
 | [`adawing-guidance`](plugins/adawing-guidance) | **AGENTS.md 生成器**（项目级提示词） | 需要初始化 agent 项目配置 |
 
-`invoker` 与 `workflow` 刻意拆开，便于只在合适时机分别启用：入口阶段用 invoker 做决策，进入实现阶段再用 workflow 推进。`security` 与 `guidance` 各自独立，按需安装。
+`invoker` 与 `workflow` 判据正交：invoker 看歧义，workflow 看改动规模。无歧义的大重构走 `self` + `full`，指令模糊的一行改动走 `PAUSE` + `micro`。四个插件都可单装，互相是软依赖：缺了对方只是覆盖面变窄，不失效。
 
 ## 安装
 

@@ -1,7 +1,7 @@
 {
   "name": "adawing-invoker",
-  "description": "代码任务决策门控：PAUSE / FALLBACK / ASK 三条机械规则，防止在信息不足、范围过大或高风险时直接执行。",
-  "version": "1.0.0",
+  "description": "动手前的判断纪律：歧义门 + self / discuss 两档校准，默认不阻塞，只在用户消息确有多种解释时停下。",
+  "version": "2.1.0",
   "author": {
     "name": "adaw"
   },
