@@ -1,7 +1,10 @@
 {
   "name": "adawing-workflow",
-  "description": "按改动规模分档的执行流程：micro / single / full 三档跑不同阶段，闸门与过程文档随规模伸缩。建议与 adawing-invoker 同装。",
-  "version": "2.1.0",
+  "description": "adawing-invoker 的下游执行补充：按规模路由 micro / single / full，并按需加载 plan、build、preview、review、verify。必须与 adawing-invoker 同装。",
+  "version": "2.0.1",
+  "dependencies": [
+    "adawing-invoker@adawing"
+  ],
   "author": {
     "name": "adaw"
   },

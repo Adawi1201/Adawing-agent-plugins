@@ -4,8 +4,8 @@
     "name": "adaw"
   },
   "metadata": {
-    "description": "AdaWing 出品的 Claude Code skill 插件集：面向 AI coding agent 的决策门控、执行工作流、安全规范与项目提示词生成。四个插件可独立安装，也可组合使用。",
-    "version": "1.2.0"
+    "description": "AdaWing 出品的 Claude Code skill 插件集：面向 AI coding agent 的决策门控、执行工作流、安全规范与项目提示词生成。invoker 可独立使用，workflow 作为其下游执行补充。",
+    "version": "2.0.1"
   },
   "plugins": [
     {
@@ -16,7 +16,7 @@
     {
       "name": "adawing-workflow",
       "source": "./plugins/adawing-workflow",
-      "description": "按改动规模分档的执行流程：micro / single / full 三档跑不同阶段，闸门与过程文档随规模伸缩。建议与 adawing-invoker 同装。"
+      "description": "adawing-invoker 的下游执行补充：按规模路由 micro / single / full，并按需加载 plan、build、preview、review、verify。安装时自动依赖 adawing-invoker。"
     },
     {
       "name": "adawing-security",

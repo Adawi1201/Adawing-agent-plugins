@@ -1,65 +1,87 @@
 {
   "skill_name": "adawing-workflow",
-  "_note": "v2 evals。prompt 必须指明目标仓库/目录，否则测到的是信息缺失处理而非待测规则。需与 adawing-invoker 同装后运行。tier 与真实触达文件数是否一致、棘轮升档等机制需要 fixture 仓库与多轮执行，现有单轮结构测不了，未纳入。",
+  "_note": "2.0.1 route and phase-contract evals. Results are recorded in the 2026-08-19 benchmark. Run with adawing-invoker installed and its EVALUATION applied first.",
   "evals": [
     {
       "id": 1,
-      "prompt": "把用户详情页的标签'用户名'改成'账号名称'。（工作目录是一个 Vue 后台管理项目）",
-      "expected_output": "三个布尔量全否，走 micro：免除闸门，直接改。不应产出 spec 或 plan 文件。",
+      "prompt": "把用户详情页的静态标签‘用户名’改成‘账号名称’。（工作目录是一个 Vue 后台管理项目，标签只在一个 git 跟踪文件中出现）",
+      "expected_output": "三个规模布尔量全否，走 micro；preview 为 none，直接 build 后 verify，不产出 plan。",
       "files": [],
       "expectations": [
-        "输出包含 tier 声明，且判定为 micro",
-        "tier 理由援引改动规模（未跨模块、未改公共接口、未改数据形状）",
-        "直接进行了修改，没有先产出 spec 或 plan 文件",
-        "没有阻塞等待用户确认"
+        "先有 invoker EVALUATION，再输出 tier micro",
+        "tier 理由引用未跨模块、未改公共接口、未改数据形状及检索证据",
+        "没有创建 plan 或 spec 文件",
+        "没有因为 micro 而跳过 verify"
       ]
     },
     {
       "id": 2,
-      "prompt": "后端订单列表接口的查询条件从'按创建时间'改为'按支付时间'，其他逻辑不变。（工作目录是一个 Spring Boot + MyBatis 项目）",
-      "expected_output": "跨 Service 与 Mapper，走 single。纯后端改动没有可视化预览，但仍须给出闸门三行并等确认。",
+      "prompt": "后端订单列表接口的查询条件从‘按创建时间’改为‘按支付时间’，其他逻辑不变。（工作目录是一个 Spring Boot + MyBatis 项目，Service 与 Mapper 的调用方已可检索）",
+      "expected_output": "跨 Service 与 Mapper，走 single；preview 为 none，但要有行内 plan、一次闸门、build、review、verify。",
       "files": [],
       "expectations": [
-        "输出包含 tier 声明，且判定为 single",
-        "在动代码前给出了要改哪些文件、行为前后差异、判定通过的条件",
-        "等待用户确认后才动生产代码",
-        "没有因为不是 UI 改动就省略闸门陈述"
+        "先查调用方并在 tier 理由引用结果",
+        "输出 single 和行内 plan",
+        "在改代码前给出文件、行为差异、通过条件并等待一次确认",
+        "纯后端改动没有生成 preview 文件，但仍执行 review 和 verify"
       ]
     },
     {
       "id": 3,
-      "prompt": "在系统用户列表页新增一列'注册时间'，数据库 sys_user 表里已经有 register_time 列了，格式显示成 YYYY-MM-DD HH:mm。（工作目录是一个 ruoyi 单体后台，后端 Java 多模块 + 前端 Vue2）",
-      "expected_output": "跨前后端且改数据形状（对外契约新增字段），走 single 或 full。定档前查调用方，给出闸门三行后才动代码。",
+      "prompt": "在系统用户列表页新增一列‘注册时间’，字段来自已有 register_time，页面要覆盖加载、空数据、请求失败三种状态。（工作目录是一个 ruoyi 单体后台，后端 Java 多模块 + 前端 Vue2）",
+      "expected_output": "跨前后端，至少走 single；验收依赖多个用户状态，preview 至少为 compact，不能直接跳过。",
       "files": [],
       "expectations": [
-        "输出包含 tier 声明，理由援引跨模块边界或数据形状",
-        "定档前查找了受影响的实体与调用方",
-        "给出了闸门三行（改哪些文件 / 前后差异 / 通过条件）",
-        "等待确认后才动生产代码"
+        "tier 理由援引跨模块调用方证据",
+        "preview 路由选择 compact 或 artifact，并覆盖三个代表状态",
+        "闸门在 build 前只出现一次",
+        "preview 没有复制完整应用或把全部产物贴回上下文"
       ]
     },
     {
       "id": 4,
-      "prompt": "把 OrderService.calculateTotal 抽出来给 PaymentService 复用。",
-      "expected_output": "抽取本身看着只碰两个文件，但定档前必须先查调用方，并在 tier 行引用检索结果。",
+      "prompt": "把 OrderService.calculateTotal 抽出来给 PaymentService 复用。（工作目录中该方法有多个调用方，要求保持现有公共行为）",
+      "expected_output": "定档前先查调用方；实际影响超出两个文件时就地升档，不以文件数规避。",
       "files": [],
       "expectations": [
-        "在定 tier 前查找了 calculateTotal 的调用方",
-        "tier 声明里引用了检索结果",
-        "没有仅凭'改两个文件'就判定为 micro",
-        "说明了触达超出预期时的升档处理"
+        "tier 之前检索 calculateTotal 的调用方",
+        "tier 理由引用真实调用方数量或边界",
+        "plan / build 中发现触达扩大时明确升档",
+        "没有把抽取任务机械判为 micro"
       ]
     },
     {
       "id": 5,
-      "prompt": "改完了吗？可以了就告诉我完成。（前情：已改完 Service 与 Mapper，mvn compile 与单元测试均通过，用户尚未手动测试）",
-      "expected_output": "两态全局生效：构建通过不等于完成，未经用户手动测试确认不得声称完成。",
+      "prompt": "改完了吗？可以了就告诉我完成。（前情：已改完 Service 与 Mapper，mvn compile 与单元测试均通过，运行时和用户手动测试都尚未执行）",
+      "expected_output": "verify 分开报告代码、自动验证、运行时验证和手动验证状态；不能把编译和单元测试通过直接说成全部完成。",
       "files": [],
       "expectations": [
-        "没有声称任务已完成",
-        "说明了还需用户手动测试确认",
-        "明确区分了'构建通过'与'已完成'",
-        "给出了建议用户验证的具体场景"
+        "明确区分自动验证已通过与运行时/手动验证未执行",
+        "没有声称所有验收已完成",
+        "指出下一步需要的运行时或用户验证"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "重做现有管理台的登录、订单、支付三个页面，并统一加载、空态、错误态和成功态的交互。（目标仓库是一个已有前后端单体项目）",
+      "expected_output": "需求包含多个子功能，走 full；不生成 workflow spec，生成 full plan，preview 选择 artifact，按 build -> review -> verify 推进。",
+      "files": [],
+      "expectations": [
+        "先有 invoker EVALUATION，再定 full",
+        "不重复创建第二套需求 spec",
+        "plan 落在 docs/adawing/plans，artifact preview 只有一个入口页",
+        "preview 只呈现代表状态，不复制完整应用"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "请按 workflow 处理一个跨模块的数据形状变更，目标仓库与调用方已明确；当前只安装了 adawing-workflow，没有安装 adawing-invoker。",
+      "expected_output": "安装级依赖不满足时，workflow 不自行补做判断，不进入执行；应提示安装/启用 invoker。",
+      "files": [],
+      "expectations": [
+        "说明 workflow 依赖 invoker",
+        "没有自行输出 tier、plan 或修改代码",
+        "没有把未安装依赖降级为普通信息缺失"
       ]
     }
   ]

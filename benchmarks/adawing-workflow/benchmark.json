@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "benchmark": "adawing-workflow-latest",
+    "date": "2026-08-19",
+    "executor": "Codex primary + multi_agent_v1",
+    "host": "codex-cli 0.147.0",
+    "plugin_source": "working-tree project-local files",
+    "claude_runtime_eval": false,
+    "runs_per_case": 1,
+    "notes": [
+      "Workflow 2 and 4 use corrected reruns after fixture callers were committed to Git.",
+      "Workflow 2 post-gate phases were intentionally deferred because no confirmation turn was supplied."
+    ]
+  },
+  "summary": {
+    "cases": 7,
+    "passed": 7,
+    "failed": 0,
+    "deferred_post_gate_cases": [2]
+  },
+  "runs": [
+    {"eval_id":1,"status":"pass","tier":"micro","preview":"none","evidence":"No plan/spec; build and verify completed."},
+    {"eval_id":2,"status":"pass_with_deferred_phases","tier":"single","preview":"none","evidence":"Corrected call graph; one gate before code; post-gate phases deferred."},
+    {"eval_id":3,"status":"pass","tier":"full","preview":"artifact","evidence":"Real crdas cross-layer route and one state preview artifact; stopped at gate."},
+    {"eval_id":4,"status":"pass","tier":"full","preview":"none","evidence":"Two tracked callers found; plan and one gate preserve public behavior."},
+    {"eval_id":5,"status":"pass","evidence":"Auto, runtime and manual verification states reported separately."},
+    {"eval_id":6,"status":"pass","tier":"full","preview":"artifact","evidence":"Three subfeatures; docs/adawing plan and one artifact; one gate."},
+    {"eval_id":7,"status":"pass","evidence":"Missing invoker dependency blocked workflow before tier/plan/build."}
+  ]
+}
