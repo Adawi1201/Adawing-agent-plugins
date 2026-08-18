@@ -1,0 +1,4 @@
+interface:
+  display_name: "AdaWing Security"
+  short_description: "Gate risky agent commands and changes"
+  default_prompt: "Use $adawing-security to gate risky commands and changes."

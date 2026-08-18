@@ -1,0 +1,4 @@
+interface:
+  display_name: "AdaWing Invoker"
+  short_description: "Calibrate ambiguity before coding tasks"
+  default_prompt: "Use $adawing-invoker to classify this coding task before changing files."

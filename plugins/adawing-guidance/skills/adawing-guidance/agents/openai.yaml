@@ -1,0 +1,4 @@
+interface:
+  display_name: "AdaWing Guidance"
+  short_description: "Generate a stable project AGENTS.md"
+  default_prompt: "Use $adawing-guidance to create or update a project AGENTS.md."

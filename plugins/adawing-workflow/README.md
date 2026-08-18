@@ -63,14 +63,25 @@ skills/adawing-workflow/
 
 安装 workflow 时由 manifest 自动解析 `adawing-invoker@adawing` 依赖。
 
+Codex 使用仓库的 `.agents/plugins/marketplace.json`。Codex manifest 不提供 Claude 的安装依赖字段，因此请先安装 invoker，再安装 workflow：
+
+```text
+codex plugin marketplace add .agents/plugins
+codex plugin add adawing-invoker@adawing
+codex plugin add adawing-workflow@adawing
+```
+
+workflow 的 Codex UI metadata 将其设为不隐式触发；它仍只接受 invoker 的判断结果作为入口。
+
 ## 版本
 
-**2.0.1**：
+**2.1.0**：
 
 - 在 2.0 执行路由基础上按需加载 tier 与 plan / build / preview / review / verify phase reference；
 - 移除 workflow 对外部流程 skill 的显式依赖，不重复创建需求 spec；
 - preview 按验收条件路由为 `none / compact / artifact`；
 - workflow 通过 manifest 正式依赖 invoker，保持单向安装关系。
+- 增加 Codex 官方 plugin manifest 与 skill UI metadata；执行阶段语义本身不变。
 
 本轮是对 2.0 反馈的修复发布。最新测评记录在 `benchmarks/adawing-workflow/benchmark.md`；不再交替重跑评测。
 

@@ -1,7 +1,7 @@
 {
   "name": "adawing-workflow",
   "description": "adawing-invoker 的下游执行补充：按规模路由 micro / single / full，并按需加载 plan、build、preview、review、verify。必须与 adawing-invoker 同装。",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "dependencies": [
     "adawing-invoker@adawing"
   ],

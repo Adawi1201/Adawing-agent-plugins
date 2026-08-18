@@ -1,0 +1,19 @@
+{
+  "name": "adawing-invoker",
+  "version": "2.1.0",
+  "description": "动手前的判断纪律：歧义门 + self / discuss 两档校准，默认不阻塞，只在用户消息确有多种解释时停下。",
+  "author": {
+    "name": "adaw"
+  },
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AdaWing Invoker",
+    "shortDescription": "在编码任务开始前校准判断与歧义",
+    "longDescription": "要求 agent 在写代码、改文件或执行命令前留下紧凑的 EVALUATION，选择 self、discuss 或 PAUSE，并只在真实验收歧义或不可逆门控时暂停。",
+    "developerName": "AdaWing",
+    "category": "Developer Tools",
+    "capabilities": ["Reasoning", "Write"],
+    "defaultPrompt": "Use $adawing-invoker to classify this coding task before changing files."
+  }
+}

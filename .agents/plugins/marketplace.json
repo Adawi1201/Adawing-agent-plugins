@@ -1,0 +1,56 @@
+{
+  "name": "adawing",
+  "interface": {
+    "displayName": "AdaWing"
+  },
+  "plugins": [
+    {
+      "name": "adawing-invoker",
+      "source": {
+        "source": "local",
+        "path": "./plugins/adawing-invoker"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "adawing-workflow",
+      "source": {
+        "source": "local",
+        "path": "./plugins/adawing-workflow"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "adawing-security",
+      "source": {
+        "source": "local",
+        "path": "./plugins/adawing-security"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "adawing-guidance",
+      "source": {
+        "source": "local",
+        "path": "./plugins/adawing-guidance"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

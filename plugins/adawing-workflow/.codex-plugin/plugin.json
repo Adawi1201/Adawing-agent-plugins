@@ -1,0 +1,19 @@
+{
+  "name": "adawing-workflow",
+  "version": "2.1.0",
+  "description": "adawing-invoker 的下游执行补充：按规模路由 micro / single / full，并按需加载 plan、build、preview、review、verify。",
+  "author": {
+    "name": "adaw"
+  },
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AdaWing Workflow",
+    "shortDescription": "按改动规模路由可验证执行阶段",
+    "longDescription": "在 adawing-invoker 已留下 EVALUATION 后，先查调用方，再按跨模块、公共接口和数据形状路由 micro、single 或 full，并按需加载执行阶段。workflow 不自行补做 invoker 的语义判断。",
+    "developerName": "AdaWing",
+    "category": "Developer Tools",
+    "capabilities": ["Reasoning", "Write"],
+    "defaultPrompt": "Use $adawing-workflow to route this already-decided coding task by change size."
+  }
+}

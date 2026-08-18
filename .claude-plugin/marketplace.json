@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "AdaWing 出品的 Claude Code skill 插件集：面向 AI coding agent 的决策门控、执行工作流、安全规范与项目提示词生成。invoker 可独立使用，workflow 作为其下游执行补充。",
-    "version": "2.0.1"
+    "version": "2.1.0"
   },
   "plugins": [
     {

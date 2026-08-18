@@ -1,6 +1,6 @@
 # adawing-plugins
 
-AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与工程实践。当前发行版本为 `2.0.1`，支持在 Claude Code 中以一个 marketplace 托管四个可独立安装的插件。
+AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与工程实践。当前发行版本为 `2.1.0`，支持在 Claude Code 与 Codex 中以 marketplace 托管四个插件。
 
 ## 插件
 
@@ -37,6 +37,20 @@ claude plugin marketplace add Adawi1201/Adawing-agent-plugins
 claude plugin install adawing-invoker@adawing --scope user
 ```
 
+### Codex
+
+Codex 接入使用仓库内的官方 marketplace 与 `.codex-plugin/plugin.json` manifest：
+
+```
+codex plugin marketplace add .agents/plugins
+codex plugin add adawing-invoker@adawing
+codex plugin add adawing-workflow@adawing  # 先安装 invoker，再安装 workflow
+codex plugin add adawing-security@adawing
+codex plugin add adawing-guidance@adawing
+```
+
+`adawing-workflow` 仍是 `adawing-invoker` 的单向下游补充。Codex marketplace 不替代这条运行约束：workflow 只有在 invoker 已留下判断结果时才进入执行路由。
+
 ## 更新
 
 插件有更新后，拉取最新 marketplace 缓存：
@@ -47,11 +61,19 @@ claude plugin marketplace update adawing
 
 必要时重装受影响的插件即可。卸载：`claude plugin uninstall <name>@adawing`。
 
+Codex 更新时重新读取本地 marketplace 后重装受影响插件：
+
+```
+codex plugin add adawing-invoker@adawing
+codex plugin add adawing-workflow@adawing
+```
+
 ## 目录结构
 
 ```
 adawing-plugins/
-├── .claude-plugin/marketplace.json    # marketplace 清单
+├── .claude-plugin/marketplace.json    # Claude marketplace 清单
+├── .agents/plugins/marketplace.json   # Codex marketplace 清单
 ├── plugins/                           # 四个独立插件
 │   ├── adawing-invoker/
 │   ├── adawing-workflow/
@@ -63,7 +85,7 @@ adawing-plugins/
     └── adawing-security/
 ```
 
-每个插件形如 `plugins/<name>/{.claude-plugin/plugin.json, skills/<name>/SKILL.md}`。workflow 的 tier 和 phase 细则位于 skill 目录下的 `references/`，只按路由加载。
+每个插件同时提供 `plugins/<name>/.claude-plugin/plugin.json`（Claude）和 `plugins/<name>/.codex-plugin/plugin.json`（Codex），skill 目录下的 `agents/openai.yaml` 提供 Codex UI metadata。workflow 的 tier 和 phase 细则位于 skill 目录下的 `references/`，只按路由加载。
 
 ## 风格约定
 

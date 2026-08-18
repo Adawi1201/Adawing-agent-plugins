@@ -44,6 +44,13 @@ adawing-security/
 
 或手动将 `skills/adawing-security/` 复制到 `~/.claude/skills/adawing-security/`。
 
+Codex 使用仓库的 `.agents/plugins/marketplace.json`：
+
+```text
+codex plugin marketplace add .agents/plugins
+codex plugin add adawing-security@adawing
+```
+
 ## 评测结果
 
 基于 4 条 eval（dangerous-cleanup / production-deploy / secret-in-repo / curl-pipe-install），完整报告与工作区见 `benchmarks/adawing-security/`：

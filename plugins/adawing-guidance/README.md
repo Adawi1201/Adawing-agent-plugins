@@ -42,6 +42,13 @@ adawing-guidance/
 
 或手动将 `skills/adawing-guidance/` 复制到 `~/.claude/skills/adawing-guidance/`。
 
+Codex 使用仓库的 `.agents/plugins/marketplace.json`：
+
+```text
+codex plugin marketplace add .agents/plugins
+codex plugin add adawing-guidance@adawing
+```
+
 ## License
 
 MIT
