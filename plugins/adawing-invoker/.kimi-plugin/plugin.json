@@ -1,6 +1,6 @@
 {
   "name": "adawing-invoker",
-  "version": "2.2.0",
+  "version": "2.3.0-prev",
   "description": "动手前的判断纪律：歧义门 + self / discuss 两档校准，默认不阻塞，只在用户消息确有多种解释时停下。",
   "author": {
     "name": "adaw"

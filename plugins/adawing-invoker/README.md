@@ -61,6 +61,14 @@ OpenCode 无需 manifest，将 `skills/adawing-invoker/` 复制或软链到 `~/.
 
 ## 版本
 
+**2.3.0-prev**（预览，依据体验修正）：
+
+- 宽泛请求（如“优化一下代码”）没有指向具体候选时属于信息缺失，走 discuss 并给出默认入口，不 PAUSE；
+- 绿地项目的技术选型和架构方案属于实质取舍，不满足 self 降档条件；
+- `[EVALUATION]` 必须早于首个改变状态的操作，检索和读取可以在它之前。
+
+依据：DeepSeek flash 在两轮测评中都复现了这三类失败；修正后没有重跑，以实际使用的效果为准。
+
 **2.2.0**：
 
 - 移除 Codex 支持；新增 Kimi Code plugin manifest 与 OpenCode 安装说明；skill 语义不变。

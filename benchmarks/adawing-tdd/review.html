@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdaWing TDD Latest Benchmark</title>
+  <style>
+    :root { color-scheme: light; --bg: #f6f7f9; --card: #fff; --text: #20242b; --muted: #667085; --line: #e4e7ec; --pass: #067647; --accent: #175cd3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 48px; }
+    h1 { margin: 0; font-size: 28px; }
+    h2 { margin: 28px 0 12px; font-size: 19px; }
+    .meta, .note { color: var(--muted); }
+    .meta { margin: 8px 0 24px; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+    .value { display: block; font-size: 25px; font-weight: 700; }
+    .label { color: var(--muted); font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    th, td { padding: 11px 13px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+    th { background: #f9fafb; font-size: 13px; }
+    tr:last-child td { border-bottom: 0; }
+    .pass { color: var(--pass); font-weight: 700; }
+    .deferred { color: var(--accent); font-weight: 700; }
+    .fail { color: #b42318; font-weight: 700; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    ul { margin: 8px 0; padding-left: 22px; }
+    .raw { white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } th, td { padding: 9px; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>AdaWing TDD Latest Benchmark</h1>
+  <p class="meta">2026-09-27 · <code>deepseek/deepseek-flash</code> · <code>opencode 1.18.32</code> · isolated HOME, adawing skills only</p>
+  <section class="grid" aria-label="Benchmark summary">
+    <div class="card"><span class="value">7/8</span><span class="label">Cases passed (latest run each)</span></div>
+    <div class="card"><span class="value">29/32</span><span class="label">Assertions passed (1 N/A)</span></div>
+    <div class="card"><span class="value">A=13 · V=0</span><span class="label">R2 gate pass conditions</span></div>
+  </section>
+  <section id="report" class="card"></section>
+  <script type="text/markdown" id="report-source">
+## By Loaded Skills
+
+Skill combinations come from the skill-load events in each transcript, not from the case design.
+
+| Skills | Case | Result | Evidence |
+|---|---|---|---|
+| tdd + invoker | tdd-1 (R2) | PASS 4/4 | Test written before the fix gave an assertion-level red (`clamp(null)=0.8`); fresh rerun after the fix passed 20/20 |
+| | tdd-2 (R1) | PASS 4/4 | No frontend test framework, so a repeatable repro script was used: 3/4 failing before the fix, 4/4 passing after |
+| | tdd-3 (R2) | FAIL 1/4 | Red `expected:<400> but was:<200>` was valid, but workflow was never loaded: no tier, no gate, no declared list, and drift arguments were taken from `git status` after the fact |
+| tdd + invoker + workflow | wf-2 (R2) | PASS 4/4 | Changed result order counted as a contract change, so tier was single; the gate listed red, green and existing tests as pass conditions; after confirmation, verify showed a fresh `mvn` run and `drift: []` |
+| | tdd-4 (R2) | PASS 5/5 + 1 N/A | "Faster" was not used as a pass condition. After a `3.89 us/op` baseline showed no observable gain, the model left the code unchanged; the benchmark script stayed outside the repo |
+| | tdd-7 (R2) | PASS 4/4 | Reported `[TDD] strength: bugfix=suggested (source: AGENTS.md)`; reproduced with `source=1` before fixing; the fix handles both numeric and string values |
+| tdd only | tdd-6 (R2) | PASS 4/4 | In verify, drift-check flagged the undeclared `src/log-rotate.js`; the model reverted it with `git checkout --` and a fresh rerun passed 11/11 |
+| off-level guard | tdd-5 (R2) | PASS 3/3 | Docs-only change: tdd was not loaded, no tests or gate were added, and the diff is a single line |
+
+## R1 → R2
+
+- tdd-7 went FAIL → PASS. R1 never read AGENTS.md; with the strength-and-source rule, R2 read the project setting and applied it.
+- wf-2 went FAIL → PASS because of the workflow contract rule: a changed sort order now counts as a public-interface change. tdd evidence lines appeared in both the gate and verify.
+- The only vague condition in R1 was wf-6's "the four states behave the same". In R2 it was split into checkable items. All R2 gate pass conditions can be written as assertions (A=13, V=0).
+- tdd-1, tdd-4, tdd-5 and tdd-6 passed in both rounds.
+
+## Known Gap
+
+Cause of the tdd-3 failure: the skill said it runs on top of workflow, but did not require routing through workflow first. After R2, one line was added to the prerequisites in `SKILL.md`: if workflow has not routed the task yet, load it and set the tier first; the only exception is when the user explicitly names a phase, such as "now enter verify". This fix has not been rerun, so this benchmark does not count tdd-3 as passing. Its effect will be judged from daily use.
+
+## Metadata
+
+- `benchmark.json` and `benchmark.md` in this directory are the source of truth
+- Fixtures: Adawing-v2 @ `3ea442c`, clawd-on-desk @ `fb686b8`
+  </script>
+  <ul class="note">
+    <li>tdd-3 is the only failure; its post-R2 fix was not rerun and is not counted as passing.</li>
+    <li>Reproducibility: one run per case per round on a sampling model, so reruns may differ. Raw transcripts were not kept; evidence was translated from Chinese grading notes and quoted output is paraphrased.</li>
+    <li>This page shows benchmark conclusions only; raw transcripts are not embedded.</li>
+  </ul>
+</main>
+<script>
+  const esc = value => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const inline = value => esc(value).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  function markdown(source) {
+    const lines = source.trim().split(/\r?\n/), out = [];
+    let paragraph = [], list = false, i = 0;
+    const flush = () => { if (paragraph.length) { out.push(`<p>${inline(paragraph.join(" "))}</p>`); paragraph = []; } };
+    const closeList = () => { if (list) { out.push("</ul>"); list = false; } };
+    while (i < lines.length) {
+      const line = lines[i].trim();
+      if (!line) { flush(); closeList(); i++; continue; }
+      if (/^\|/.test(line) && i + 1 < lines.length && /^\|?\s*:?-{3,}/.test(lines[i + 1].trim())) {
+        flush(); closeList();
+        const cells = row => row.trim().replace(/^\||\|$/g, "").split("|").map(cell => inline(cell.trim()));
+        const header = cells(line); i += 2; let table = `<table><thead><tr>${header.map(cell => `<th>${cell}</th>`).join("")}</tr></thead><tbody>`;
+        while (i < lines.length && /^\|/.test(lines[i].trim())) { table += `<tr>${cells(lines[i]).map(cell => `<td>${cell}</td>`).join("")}</tr>`; i++; }
+        out.push(table + "</tbody></table>"); continue;
+      }
+      const heading = line.match(/^(#{1,3})\s+(.+)$/);
+      if (heading) { flush(); closeList(); out.push(`<h${heading[1].length}>${inline(heading[2])}</h${heading[1].length}>`); i++; continue; }
+      const quote = line.match(/^>\s?(.+)$/);
+      if (quote) { flush(); closeList(); out.push(`<blockquote>${inline(quote[1])}</blockquote>`); i++; continue; }
+      const item = line.match(/^[-*]\s+(.+)$/);
+      if (item) { flush(); if (!list) { out.push("<ul>"); list = true; } out.push(`<li>${inline(item[1])}</li>`); i++; continue; }
+      closeList(); paragraph.push(line); i++;
+    }
+    flush(); closeList(); return out.join("");
+  }
+  const target = document.getElementById("report"), source = document.getElementById("report-source").textContent;
+  try { target.innerHTML = markdown(source); } catch (_) { target.textContent = source.trim(); target.className += " raw"; }
+</script>
+</body>
+</html>

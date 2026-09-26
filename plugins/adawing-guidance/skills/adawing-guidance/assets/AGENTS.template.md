@@ -32,6 +32,7 @@
 - 未完成验证前不得声称"已完成"
 - 未经明确要求,不执行 git commit / push
 - 修改公共模块前,先说明影响范围
+- {{可选,仅装有 adawing-tdd 且需覆盖默认强度时保留}}adawing-tdd: bugfix=required feature=suggested micro=off
 
 ## 禁区
 

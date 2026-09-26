@@ -1,0 +1,303 @@
+{
+  "metadata": {
+    "benchmark": "adawing-tdd-latest",
+    "date": "2026-09-27",
+    "model": "deepseek/deepseek-flash",
+    "executor": "opencode 1.18.32, opencode run --format json, isolated HOME",
+    "fixtures": {
+      "adawing": "Adawing-v2@3ea442c425d9a249a65018b1588f71f64f7297aa",
+      "clawd": "clawd-on-desk@fb686b82cf4c2c7e2aad6f314b728a4b7a5bfc5d"
+    },
+    "rounds": {
+      "R1": "tdd 1.0.0 draft",
+      "R2": "R1 plus: stated strength and source, gate list includes tests, drift-check takes only the declared list, no unclassified V conditions"
+    },
+    "selection": "each case uses its latest run; skills_loaded is from transcript skill-load events",
+    "post_run_change": "after R2, SKILL.md prerequisite added: load adawing-workflow first if not yet routed (fix for tdd-3); not rerun",
+    "reproducibility": "Single run per case per round with a sampling model; results may vary on rerun. Evidence line references (transcript.md:N, jsonl #N) point to raw transcripts that were not retained, so they cannot be re-checked. Assertion texts and evidence were translated from the original Chinese grading notes; quoted model output is paraphrased in English and may differ slightly in wording."
+  },
+  "summary": {
+    "cases": 8,
+    "passed": 7,
+    "failed": 1,
+    "assertions_passed": 29,
+    "assertions_total": 32,
+    "na": 1
+  },
+  "runs": [
+    {
+      "id": "tdd-1",
+      "round": "R2",
+      "skills_loaded": "invoker+tdd",
+      "result": "PASS",
+      "r1_result": "PASS",
+      "path": "self",
+      "tier": null,
+      "confirm_round": false,
+      "assertions": [
+        {
+          "text": "Test written and run before editing src/text-scale.js",
+          "pass": true,
+          "evidence": "transcript.md:434 assertion added first to get red; order: test edits :421/:438 → red :445 → source edit :540"
+        },
+        {
+          "text": "Red is an assertion failure (expected 1, got 0.8), not an error",
+          "pass": true,
+          "evidence": "transcript.md:495 failureType: testCodeFailure; :389 clamp(null)=0.8"
+        },
+        {
+          "text": "Fresh rerun passes after the fix",
+          "pass": true,
+          "evidence": "transcript.md:547-552 node --test → # pass 20 # fail 0"
+        },
+        {
+          "text": "Existing test/text-scale.test.js run (regression)",
+          "pass": true,
+          "evidence": "transcript.md:547 all 20 cases in the file pass; :665 npm test failure set identical before and after (204 pre-existing environment failures)"
+        }
+      ],
+      "gate_conditions": null
+    },
+    {
+      "id": "tdd-2",
+      "round": "R1",
+      "skills_loaded": "invoker+tdd",
+      "result": "PASS",
+      "r1_result": null,
+      "path": "discuss",
+      "tier": null,
+      "confirm_round": false,
+      "assertions": [
+        {
+          "text": "Repro evidence before the fix (repeatable script)",
+          "pass": true,
+          "evidence": "transcript.md:543-554 node scripts/article-delete-message.repro.mjs → 3/4 failed"
+        },
+        {
+          "text": "Did not claim a root cause from reading code and then edit",
+          "pass": true,
+          "evidence": "transcript.md:540 red run first; ArticlesView.vue call site edited only at :557"
+        },
+        {
+          "text": "Same repro passes after the fix, in this run",
+          "pass": true,
+          "evidence": "transcript.md:566-575 same command 4/4 passed, exit=0"
+        },
+        {
+          "text": "If tests are skipped, a reason is given (bugfix defaults to required)",
+          "pass": true,
+          "evidence": "transcript.md:524,658 no frontend test framework; script drives the real doDelete path"
+        }
+      ],
+      "gate_conditions": null
+    },
+    {
+      "id": "tdd-3",
+      "round": "R2",
+      "skills_loaded": "invoker+tdd",
+      "result": "FAIL",
+      "r1_result": "FAIL",
+      "path": "discuss",
+      "tier": null,
+      "confirm_round": false,
+      "assertions": [
+        {
+          "text": "tier ≥ single (validation rule change)",
+          "pass": false,
+          "evidence": "no [TIER] anywhere (only 4 text events, jsonl #58/74/81/100)"
+        },
+        {
+          "text": "Gate pass conditions are input → expected-output assertions; file list includes test files",
+          "pass": false,
+          "evidence": "transcript.md:1092 \"done, one change…\"; no gate, no pass conditions, no file list"
+        },
+        {
+          "text": "Red then green, with the red failure line recorded",
+          "pass": true,
+          "evidence": "transcript.md:984 Status expected:<400> but was:<200>; :1022 Tests run: 4, Failures: 0 (first-round evidence)"
+        },
+        {
+          "text": "drift-check arguments equal the gate list; behavior/regression/scope conclusions",
+          "pass": false,
+          "evidence": "transcript.md:1044 changed 2 / declared 2 / drift []; arguments taken from git status after the fact, no gate list to check against; three-layer conclusions present but the declared list is missing"
+        }
+      ],
+      "gate_conditions": null
+    },
+    {
+      "id": "tdd-4",
+      "round": "R2",
+      "skills_loaded": "invoker+workflow+tdd",
+      "result": "PASS",
+      "r1_result": "PASS",
+      "path": "discuss (decided not to change)",
+      "tier": null,
+      "confirm_round": false,
+      "assertions": [
+        {
+          "text": "\"Faster\" not used verbatim as a pass condition",
+          "pass": true,
+          "evidence": "transcript.md:682 no observable performance problem; :690 default action is to leave it unchanged"
+        },
+        {
+          "text": "Quantified into a measurable metric with a measurement method",
+          "pass": true,
+          "evidence": "transcript.md:317-323 per_call_us table; script /tmp/opencode/bench-redact.js (:314)"
+        },
+        {
+          "text": "Baseline measured before optimizing",
+          "pass": true,
+          "evidence": "transcript.md:320-321 per_call_us=3.89/38.55; :662 avg 0.830 us"
+        },
+        {
+          "text": "test/secret-redact.test.js run (behavior unchanged)",
+          "pass": true,
+          "evidence": "transcript.md:637-650 # tests 4 / # pass 4 / # fail 0"
+        },
+        {
+          "text": "Declared list includes test files, or repro/benchmark scripts live outside the repo",
+          "pass": true,
+          "evidence": "all benchmark/repro scripts in /tmp/opencode; zero repo changes (diff.patch 0 bytes)"
+        },
+        {
+          "text": "drift-check arguments match the declared list; undeclared files not added afterwards",
+          "pass": "na",
+          "evidence": "no gate, no declared list, no drift-check (model chose zero changes); step not executed, not executed-but-wrong"
+        }
+      ],
+      "gate_conditions": null
+    },
+    {
+      "id": "tdd-7",
+      "round": "R2",
+      "skills_loaded": "invoker+workflow+tdd",
+      "result": "PASS",
+      "r1_result": "FAIL",
+      "path": "discuss",
+      "tier": "micro",
+      "confirm_round": false,
+      "assertions": [
+        {
+          "text": "Reports [TDD] strength: bugfix=suggested (source: AGENTS.md) or equivalent; AGENTS.md unchanged",
+          "pass": true,
+          "evidence": "transcript.md:945 [TDD] strength: bugfix=suggested (source: AGENTS.md; overrides default required, red/green still done); diff only source.js"
+        },
+        {
+          "text": "Reproduce before editing",
+          "pass": true,
+          "evidence": "transcript.md:785 pre-fix FAIL AI_GENERATED numeric 1 … expected Agent got Original; edit only at :796"
+        },
+        {
+          "text": "Reason for skipping tests is based on the suggested strength",
+          "pass": true,
+          "evidence": "transcript.md:945 no frontend framework; repro script outside the repo at /tmp/opencode/source-label-repro.mjs"
+        },
+        {
+          "text": "Repeatable evidence before and after; handles numeric and string forms or justifies otherwise",
+          "pass": true,
+          "evidence": "transcript.md:808/:814 ALL PASS; :834-836 checks === 1, 'AI_GENERATED' and sourceAgent; :964 drift 0"
+        }
+      ],
+      "gate_conditions": null
+    },
+    {
+      "id": "wf-2",
+      "round": "R2",
+      "skills_loaded": "invoker+workflow+tdd",
+      "result": "PASS",
+      "r1_result": "FAIL",
+      "path": "self→workflow",
+      "tier": "single",
+      "confirm_round": true,
+      "assertions": [
+        {
+          "text": "Caller search reaches the Controller (ArticleController)",
+          "pass": true,
+          "evidence": "transcript.md:101-104 grep hits ArticleController.java:43 listAll; :921-957 Controller read"
+        },
+        {
+          "text": "Public-interface flag hit (result order is an external contract), tier ≥ single, inline plan",
+          "pass": true,
+          "evidence": "transcript.md:966 [TIER: single] …admin API result order is an observable contract, one flag hit; :969-975 inline Plan"
+        },
+        {
+          "text": "Gate lists files, behavior diff and pass conditions, then stops",
+          "pass": true,
+          "evidence": "transcript.md:977-983 ## Gate (please confirm): 2 exact files; pass conditions = red before / green after / affected existing tests pass; first round ends at :983"
+        },
+        {
+          "text": "Confirm round runs build → review → verify; verify has fresh command evidence",
+          "pass": true,
+          "evidence": "transcript.md:1384-1389 Build/Review; :1400 green: mvn …Tests run: 1, Failures: 0; :1402 drift: []"
+        }
+      ],
+      "gate_conditions": {
+        "A": 3,
+        "M": 0,
+        "V": 0,
+        "vague_texts": []
+      }
+    },
+    {
+      "id": "tdd-6",
+      "round": "R2",
+      "skills_loaded": "tdd",
+      "result": "PASS",
+      "r1_result": "PASS",
+      "path": "verify",
+      "tier": null,
+      "confirm_round": false,
+      "assertions": [
+        {
+          "text": "Scope check run and src/log-rotate.js found",
+          "pass": true,
+          "evidence": "transcript.md:325-327 changed 3 / declared 2 / drift [src/log-rotate.js], exit=1"
+        },
+        {
+          "text": "Handled (reverted, or explained and appended), not ignored",
+          "pass": true,
+          "evidence": "transcript.md:336 git checkout -- src/log-rotate.js; :347 drift []"
+        },
+        {
+          "text": "test/size-utils.test.js rerun in this run",
+          "pass": true,
+          "evidence": "transcript.md:271-293 # pass 11; :354 16/16 after revert"
+        },
+        {
+          "text": "Did not cite \"already passed earlier\" in place of a fresh result",
+          "pass": true,
+          "evidence": "transcript.md:375-376 green is this run's 11/11; red was seen in the earlier phase and not re-captured (stated as such)"
+        }
+      ],
+      "gate_conditions": null
+    },
+    {
+      "id": "tdd-5",
+      "round": "R2",
+      "skills_loaded": "invoker (off-level guard; tdd not loaded)",
+      "result": "PASS",
+      "r1_result": "PASS",
+      "path": "self",
+      "tier": null,
+      "confirm_round": false,
+      "assertions": [
+        {
+          "text": "No tests or placeholder tests written",
+          "pass": true,
+          "evidence": "tool sequence only grep/read/edit/git-diff; diff.patch touches only README.md"
+        },
+        {
+          "text": "No gate or extra artifacts added because of tdd",
+          "pass": true,
+          "evidence": "transcript.md:191 [OBSERVER] only README.md:169 changed; no gate/plan/test output"
+        },
+        {
+          "text": "Diff changes only that line",
+          "pass": true,
+          "evidence": "transcript.md:182-183 -npm install / +pnpm install, single hunk"
+        }
+      ],
+      "gate_conditions": null
+    }
+  ]
+}

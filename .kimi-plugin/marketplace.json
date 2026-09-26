@@ -12,6 +12,11 @@
       "source": "./plugins/adawing-workflow"
     },
     {
+      "id": "adawing-tdd",
+      "displayName": "AdaWing TDD",
+      "source": "./plugins/adawing-tdd"
+    },
+    {
       "id": "adawing-security",
       "displayName": "AdaWing Security",
       "source": "./plugins/adawing-security"

@@ -17,7 +17,7 @@
 
 | Tier | 判据 | 阶段 |
 |---|---|---|
-| `micro` | 未跨模块、未改公共接口、未改数据形状 | preview 按需 -> build -> verify |
+| `micro` | 未跨模块、未改公共接口（含对外行为契约）、未改数据形状 | preview 按需 -> build -> verify |
 | `single` | 命中一个规模布尔量 | plan -> preview 按需 -> gate -> build -> review -> verify |
 | `full` | 命中两个以上，或包含多个子功能 | plan -> preview 按需 -> gate -> build -> review -> verify |
 
@@ -68,6 +68,12 @@ Kimi Code 使用仓库根部的 `.kimi-plugin/marketplace.json`（`/plugins mark
 OpenCode 无需 manifest，将 `skills/adawing-workflow/` 复制或软链到 `~/.config/opencode/skills/adawing-workflow/`；OpenCode 也读取 `~/.claude/skills/`。workflow 仍只接受 invoker 的判断结果作为入口，invoker 必须同装。
 
 ## 版本
+
+**2.3.0-prev**（预览）：
+
+- “改公共接口”包含签名不变、但对外可观察契约变化的情况，如返回内容或顺序、状态码、校验规则、持久化结果；文案和样式不算；
+- tier 理由中的调用方要写到对外入口（Controller、路由、页面）；
+- 与 invoker 2.3.0-prev、adawing-tdd 1.0.0 同步发布。
 
 **2.2.0**：
 

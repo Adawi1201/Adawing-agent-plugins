@@ -1,0 +1,84 @@
+{
+  "skill_name": "adawing-tdd",
+  "_note": "1.0.0 evals. Run with adawing-invoker and adawing-workflow installed. The key signal is whether the model reaches for tests on its own to reproduce bugs and check drift, not whether it merely mentions TDD.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "用户反馈：购物车数量为 0 时仍然能提交订单。帮我修一下。（工作目录是一个带 vitest 的 TypeScript 项目，下单校验在 src/order/validate.ts）",
+      "expected_output": "bugfix 默认 required：先写一条在修复前因断言失败的测试复现问题，再改 validate.ts，最后本轮重跑取得绿灯。",
+      "files": [],
+      "expectations": [
+        "修改 src/order/validate.ts 之前已经写好测试并运行",
+        "红灯是断言失败（如期望抛错 / 返回 false 而实际通过），不是编译或导入错误",
+        "修复后本轮重新运行测试并给出通过输出",
+        "证据中能对应上‘数量为 0 仍可下单’这一现象"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "登录接口偶尔返回 500，日志里是 NullPointerException，在 AuthService.login。（工作目录是 Spring Boot + JUnit5 + Maven 项目）",
+      "expected_output": "不凭读代码猜根因直接改；先构造能触发 NPE 的输入写测试取得红灯，再修复。",
+      "files": [],
+      "expectations": [
+        "在改生产代码前用测试（或可重复的复现命令）触发了 NPE",
+        "没有在未复现的情况下声称已定位根因",
+        "修复后同一测试本轮通过，并运行了 AuthService 相关的既有测试"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "给用户注册接口加上邮箱格式校验，非法邮箱返回 400 和错误信息。（工作目录是 Express + jest 项目，路由调用方可检索）",
+      "expected_output": "single：gate 中的通过条件写成可断言形式并给出测试位置；build 先红后绿；verify 做三层漂移对账。",
+      "files": [],
+      "expectations": [
+        "gate 的每条通过条件是‘输入 → 期望输出’的断言或明确标注的手动项，没有‘功能正常’类模糊条件",
+        "gate 声明了允许改动的文件清单",
+        "新测试先红后绿，且有红灯失败行记录",
+        "verify 运行了 drift-check 或等价的 git 对账，并给出行为、回归、范围三层结论"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "性能优化一下商品搜索，让它更快。（工作目录是一个 Python + pytest 服务）",
+      "expected_output": "‘更快’无法直接断言：在 plan/gate 中改写为可量化的条件（如给定数据量下耗时阈值或查询次数），或说明需要用户给出目标后以默认阈值继续。",
+      "files": [],
+      "expectations": [
+        "没有把‘更快’原样作为通过条件",
+        "给出了量化后的断言（耗时、查询次数或复杂度指标）及测量方式",
+        "有优化前的基线测量作为红灯或对照证据"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "把 README 里的安装命令从 npm 改成 pnpm。",
+      "expected_output": "纯文档 micro 改动，强度 off：不写测试，不因 tdd 增加流程。",
+      "files": [],
+      "expectations": [
+        "没有为文档改动编写测试或占位测试",
+        "没有因 tdd 额外设置闸门或产出文件"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "修复订单金额四舍五入错误。（前情：你已写好测试 OrderAmountTest#roundsHalfUp 并看到它断言失败，然后修改了 OrderAmount.java 使其通过；过程中你顺手格式化了 OrderController.java。现在进入 verify）",
+      "expected_output": "verify 用 drift-check 发现 OrderController.java 不在声明清单内，说明原因并撤回无关格式化或按棘轮追加，而不是直接报告完成。",
+      "files": [],
+      "expectations": [
+        "运行了范围对账并发现 OrderController.java",
+        "对清单外文件给出处理（撤回或说明后追加），没有忽略",
+        "本轮重新运行 roundsHalfUp 与相关既有测试，而不是引用前情结果"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "修复这个 bug：导出的 CSV 中文乱码。项目 AGENTS.md 中有一行 `adawing-tdd: bugfix=suggested`。你判断写测试成本过高（涉及文件下载流）。",
+      "expected_output": "强度按 AGENTS.md 取 suggested；允许跳过测试但必须写一行理由，并改用可重复的复现命令先观察乱码输出。",
+      "files": [],
+      "expectations": [
+        "读取并采用了 AGENTS.md 中的强度设置，没有按内置 required 处理，也没有修改该行",
+        "跳过测试时写明理由",
+        "仍给出修复前后的可重复复现证据（命令与输出）"
+      ]
+    }
+  ]
+}
