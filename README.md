@@ -1,6 +1,6 @@
 # adawing-plugins
 
-AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与工程实践。当前发行版本为 `2.1.0`，支持在 Claude Code 与 Codex 中以 marketplace 托管四个插件。
+AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与工程实践。当前发行版本为 `2.2.0`，支持在 Claude Code 与 Kimi Code 中以 marketplace 托管四个插件，OpenCode 通过 skills 目录直接使用。
 
 ## 插件
 
@@ -37,19 +37,35 @@ claude plugin marketplace add Adawi1201/Adawing-agent-plugins
 claude plugin install adawing-invoker@adawing --scope user
 ```
 
-### Codex
+### Kimi Code
 
-Codex 接入使用仓库内的官方 marketplace 与 `.codex-plugin/plugin.json` manifest：
+Kimi Code 使用仓库根部的 `.kimi-plugin/marketplace.json` 自定义 marketplace 与各插件的 `.kimi-plugin/plugin.json` manifest。克隆仓库后传入本地路径：
 
 ```
-codex plugin marketplace add .agents/plugins
-codex plugin add adawing-invoker@adawing
-codex plugin add adawing-workflow@adawing  # 先安装 invoker，再安装 workflow
-codex plugin add adawing-security@adawing
-codex plugin add adawing-guidance@adawing
+/plugins marketplace /path/to/adawing-plugins/.kimi-plugin/marketplace.json
 ```
 
-`adawing-workflow` 仍是 `adawing-invoker` 的单向下游补充。Codex marketplace 不替代这条运行约束：workflow 只有在 invoker 已留下判断结果时才进入执行路由。
+然后在 plugin 管理器（`/plugins`）中按需安装，或用斜杠命令直接安装单个插件：
+
+```
+/plugins install /path/to/adawing-plugins/plugins/adawing-invoker
+```
+
+Kimi Code manifest 不提供安装依赖字段，因此请先安装 `adawing-invoker`，再安装 `adawing-workflow`。安装后运行 `/reload` 或 `/new` 生效。
+
+### OpenCode
+
+OpenCode 没有插件打包机制，直接使用 skills 目录。将各插件的 skill 目录复制或软链到全局 skills 目录：
+
+```
+mkdir -p ~/.config/opencode/skills
+ln -s "$PWD/plugins/adawing-invoker/skills/adawing-invoker" ~/.config/opencode/skills/adawing-invoker
+ln -s "$PWD/plugins/adawing-workflow/skills/adawing-workflow" ~/.config/opencode/skills/adawing-workflow
+ln -s "$PWD/plugins/adawing-security/skills/adawing-security" ~/.config/opencode/skills/adawing-security
+ln -s "$PWD/plugins/adawing-guidance/skills/adawing-guidance" ~/.config/opencode/skills/adawing-guidance
+```
+
+OpenCode 也读取 `~/.claude/skills/`，已通过 Claude 手动安装方式放置的 skill 无需重复安装。
 
 ## 更新
 
@@ -61,19 +77,12 @@ claude plugin marketplace update adawing
 
 必要时重装受影响的插件即可。卸载：`claude plugin uninstall <name>@adawing`。
 
-Codex 更新时重新读取本地 marketplace 后重装受影响插件：
-
-```
-codex plugin add adawing-invoker@adawing
-codex plugin add adawing-workflow@adawing
-```
-
 ## 目录结构
 
 ```
 adawing-plugins/
 ├── .claude-plugin/marketplace.json    # Claude marketplace 清单
-├── .agents/plugins/marketplace.json   # Codex marketplace 清单
+├── .kimi-plugin/marketplace.json      # Kimi Code marketplace 清单
 ├── plugins/                           # 四个独立插件
 │   ├── adawing-invoker/
 │   ├── adawing-workflow/
@@ -85,7 +94,7 @@ adawing-plugins/
     └── adawing-security/
 ```
 
-每个插件同时提供 `plugins/<name>/.claude-plugin/plugin.json`（Claude）和 `plugins/<name>/.codex-plugin/plugin.json`（Codex），skill 目录下的 `agents/openai.yaml` 提供 Codex UI metadata。workflow 的 tier 和 phase 细则位于 skill 目录下的 `references/`，只按路由加载。
+每个插件提供 `plugins/<name>/.claude-plugin/plugin.json`（Claude Code）与 `plugins/<name>/.kimi-plugin/plugin.json`（Kimi Code）两份 manifest；OpenCode 直接使用 skill 目录，不需要清单。workflow 的 tier 和 phase 细则位于 skill 目录下的 `references/`，只按路由加载。
 
 ## 风格约定
 

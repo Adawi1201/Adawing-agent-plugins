@@ -4,7 +4,7 @@ Agent **安全行为规范** skill。AI agent 在真实系统上执行命令、�
 
 ## 定位
 
-面向 AI coding agent（Claude Code、Codex、OpenClaw 等）的横切安全层。与决策/执行类 skill 互补：`adawing-invoker` 决定做不做，`adawing-workflow` 决定怎么做，本 skill 确保任何一步都不会造成静默的不可逆损害。
+面向 AI coding agent（Claude Code、OpenCode、Kimi Code 等）的横切安全层。与决策/执行类 skill 互补：`adawing-invoker` 决定做不做，`adawing-workflow` 决定怎么做，本 skill 确保任何一步都不会造成静默的不可逆损害。
 
 ## 触发条件
 
@@ -44,12 +44,9 @@ adawing-security/
 
 或手动将 `skills/adawing-security/` 复制到 `~/.claude/skills/adawing-security/`。
 
-Codex 使用仓库的 `.agents/plugins/marketplace.json`：
+Kimi Code 使用仓库根部的 `.kimi-plugin/marketplace.json`（`/plugins marketplace <路径>`），或直接 `/plugins install <本插件目录>`。
 
-```text
-codex plugin marketplace add .agents/plugins
-codex plugin add adawing-security@adawing
-```
+OpenCode 无需 manifest，将 `skills/adawing-security/` 复制或软链到 `~/.config/opencode/skills/adawing-security/`；OpenCode 也读取 `~/.claude/skills/`，已按上文手动安装的无须重复。
 
 ## 评测结果
 

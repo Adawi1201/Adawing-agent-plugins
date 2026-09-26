@@ -1,0 +1,25 @@
+{
+  "version": "2",
+  "plugins": [
+    {
+      "id": "adawing-invoker",
+      "displayName": "AdaWing Invoker",
+      "source": "./plugins/adawing-invoker"
+    },
+    {
+      "id": "adawing-workflow",
+      "displayName": "AdaWing Workflow",
+      "source": "./plugins/adawing-workflow"
+    },
+    {
+      "id": "adawing-security",
+      "displayName": "AdaWing Security",
+      "source": "./plugins/adawing-security"
+    },
+    {
+      "id": "adawing-guidance",
+      "displayName": "AdaWing Guidance",
+      "source": "./plugins/adawing-guidance"
+    }
+  ]
+}

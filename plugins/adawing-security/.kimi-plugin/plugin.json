@@ -1,0 +1,16 @@
+{
+  "name": "adawing-security",
+  "version": "1.1.0",
+  "description": "Agent 安全行为规范：三色风险分级、不可逆操作门控、生产环境准则、密钥泄漏检测与网络隔离。",
+  "author": {
+    "name": "adaw"
+  },
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AdaWing Security",
+    "shortDescription": "命令、删除、部署前的风险分级与门控",
+    "longDescription": "为 AI coding agent 提供危险指令识别、GREEN / YELLOW / RED 三色风险分级、不可逆操作门控、生产环境行动准则、密钥泄漏检测与网络隔离规范。",
+    "developerName": "AdaWing"
+  }
+}

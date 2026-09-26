@@ -1,6 +1,6 @@
 ---
 name: adawing-guidance
-description: 为软件项目生成或更新项目级 AGENTS.md（agent 项目提示词/固定前缀）。当用户要求"生成 AGENTS.md"、"初始化 agent 配置"、"写项目级提示词"、为 Claude Code / Codex / Cursor 等编码 agent 创建项目说明文件，或提到 agents.md、项目级 prompt、固定前缀时使用。通过扫描项目结构、技术栈与命令，产出缓存友好、稳定度排序、无冗余的 AGENTS.md。
+description: 为软件项目生成或更新项目级 AGENTS.md（agent 项目提示词/固定前缀）。当用户要求"生成 AGENTS.md"、"初始化 agent 配置"、"写项目级提示词"、为 Claude Code / OpenCode / Kimi Code / Cursor 等编码 agent 创建项目说明文件，或提到 agents.md、项目级 prompt、固定前缀时使用。通过扫描项目结构、技术栈与命令，产出缓存友好、稳定度排序、无冗余的 AGENTS.md。
 ---
 
 # adawing-guidance —— AGENTS.md 初始化生成器

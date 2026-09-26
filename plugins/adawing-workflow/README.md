@@ -63,17 +63,15 @@ skills/adawing-workflow/
 
 安装 workflow 时由 manifest 自动解析 `adawing-invoker@adawing` 依赖。
 
-Codex 使用仓库的 `.agents/plugins/marketplace.json`。Codex manifest 不提供 Claude 的安装依赖字段，因此请先安装 invoker，再安装 workflow：
+Kimi Code 使用仓库根部的 `.kimi-plugin/marketplace.json`（`/plugins marketplace <路径>`），或直接 `/plugins install <本插件目录>`。Kimi Code manifest 无安装依赖字段，请先安装 `adawing-invoker`，再安装本插件。
 
-```text
-codex plugin marketplace add .agents/plugins
-codex plugin add adawing-invoker@adawing
-codex plugin add adawing-workflow@adawing
-```
-
-workflow 的 Codex UI metadata 将其设为不隐式触发；它仍只接受 invoker 的判断结果作为入口。
+OpenCode 无需 manifest，将 `skills/adawing-workflow/` 复制或软链到 `~/.config/opencode/skills/adawing-workflow/`；OpenCode 也读取 `~/.claude/skills/`。workflow 仍只接受 invoker 的判断结果作为入口，invoker 必须同装。
 
 ## 版本
+
+**2.2.0**：
+
+- 移除 Codex 支持；新增 Kimi Code plugin manifest 与 OpenCode 安装说明；执行阶段语义不变。
 
 **2.1.0**：
 
@@ -81,7 +79,6 @@ workflow 的 Codex UI metadata 将其设为不隐式触发；它仍只接受 inv
 - 移除 workflow 对外部流程 skill 的显式依赖，不重复创建需求 spec；
 - preview 按验收条件路由为 `none / compact / artifact`；
 - workflow 通过 manifest 正式依赖 invoker，保持单向安装关系。
-- 增加 Codex 官方 plugin manifest 与 skill UI metadata；执行阶段语义本身不变。
 
 本轮是对 2.0 反馈的修复发布。最新测评记录在 `benchmarks/adawing-workflow/benchmark.md`；不再交替重跑评测。
 

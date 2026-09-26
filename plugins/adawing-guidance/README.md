@@ -4,7 +4,7 @@
 
 ## 定位
 
-面向需要为编码 agent（Claude Code / Codex / Cursor 等）建立项目级提示词的场景。核心原则：**只写模型从代码里推断不出来、又不会频繁变化、且几乎每个任务都用得上的信息。**
+面向需要为编码 agent（Claude Code / OpenCode / Kimi Code / Cursor 等）建立项目级提示词的场景。核心原则：**只写模型从代码里推断不出来、又不会频繁变化、且几乎每个任务都用得上的信息。**
 
 ## 触发条件
 
@@ -42,12 +42,9 @@ adawing-guidance/
 
 或手动将 `skills/adawing-guidance/` 复制到 `~/.claude/skills/adawing-guidance/`。
 
-Codex 使用仓库的 `.agents/plugins/marketplace.json`：
+Kimi Code 使用仓库根部的 `.kimi-plugin/marketplace.json`（`/plugins marketplace <路径>`），或直接 `/plugins install <本插件目录>`。
 
-```text
-codex plugin marketplace add .agents/plugins
-codex plugin add adawing-guidance@adawing
-```
+OpenCode 无需 manifest，将 `skills/adawing-guidance/` 复制或软链到 `~/.config/opencode/skills/adawing-guidance/`；OpenCode 也读取 `~/.claude/skills/`，已按上文手动安装的无须重复。
 
 ## License
 

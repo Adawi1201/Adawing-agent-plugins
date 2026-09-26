@@ -53,16 +53,17 @@ adawing-invoker/
 
 手动复制时，将 `skills/adawing-invoker/` 放入 `~/.claude/skills/adawing-invoker/`。要使用 workflow，必须同时安装 workflow 及其自动拉取的 invoker。
 
-Codex 使用仓库的 `.agents/plugins/marketplace.json`：
+本插件可独立安装。
 
-```text
-codex plugin marketplace add .agents/plugins
-codex plugin add adawing-invoker@adawing
-```
+Kimi Code 使用仓库根部的 `.kimi-plugin/marketplace.json`（`/plugins marketplace <路径>`），或直接 `/plugins install <本插件目录>`。
 
-本插件可独立安装；Codex UI metadata 位于 `skills/adawing-invoker/agents/openai.yaml`。
+OpenCode 无需 manifest，将 `skills/adawing-invoker/` 复制或软链到 `~/.config/opencode/skills/adawing-invoker/`；OpenCode 也读取 `~/.claude/skills/`，已按上文手动安装的无须重复。
 
 ## 版本
+
+**2.2.0**：
+
+- 移除 Codex 支持；新增 Kimi Code plugin manifest 与 OpenCode 安装说明；skill 语义不变。
 
 **2.1.0**：
 
@@ -71,7 +72,6 @@ codex plugin add adawing-invoker@adawing
 - “无实质取舍 / 无歧义 / 无不可逆”可以作为明确结论，但不能省略报告；
 - 收紧多候选冲突时的验收歧义门，避免单文件可逆豁免替用户选择目标；
 - 保留 2.0 的歧义门、低成本豁免、不可逆门控和按需加载阻塞细则。
-- 增加 Codex 官方 plugin manifest 与 skill UI metadata；skill 语义本身不变。
 
 本轮是对 2.0 反馈的修复发布。最新测评记录在 `benchmarks/adawing-invoker/benchmark.md`：Eval 3 在修正前失败，已补规则与回归断言；按收尾约定不再重跑。
 
