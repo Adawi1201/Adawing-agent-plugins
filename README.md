@@ -41,7 +41,13 @@ claude plugin install adawing-invoker@adawing --scope user
 
 ### Kimi Code
 
-Kimi Code 使用仓库根部的 `.kimi-plugin/marketplace.json` 自定义 marketplace 与各插件的 `.kimi-plugin/plugin.json` manifest。克隆仓库后传入本地路径：
+整包安装（推荐）：仓库根部的 `kimi.plugin.json` 把五个插件聚合为单个 `adawing` 插件，直接从 GitHub 安装：
+
+```
+/plugins install https://github.com/Adawi1201/Adawing-agent-plugins
+```
+
+按需安装单个插件：克隆仓库后加载根部的 `.kimi-plugin/marketplace.json` 自定义 marketplace（各插件的 manifest 位于各自 `.kimi-plugin/plugin.json`）：
 
 ```
 /plugins marketplace /path/to/adawing-plugins/.kimi-plugin/marketplace.json
@@ -53,7 +59,7 @@ Kimi Code 使用仓库根部的 `.kimi-plugin/marketplace.json` 自定义 market
 /plugins install /path/to/adawing-plugins/plugins/adawing-invoker
 ```
 
-Kimi Code manifest 不提供安装依赖字段，因此请先安装 `adawing-invoker`，再安装 `adawing-workflow`。安装后运行 `/reload` 或 `/new` 生效。
+单插件安装时 Kimi Code manifest 不提供安装依赖字段，因此请先安装 `adawing-invoker`，再安装 `adawing-workflow` 与 `adawing-tdd`；整包安装无此顺序问题。安装后运行 `/reload` 或 `/new` 生效。
 
 ### OpenCode
 
@@ -85,7 +91,8 @@ claude plugin marketplace update adawing
 ```
 adawing-plugins/
 ├── .claude-plugin/marketplace.json    # Claude marketplace 清单
-├── .kimi-plugin/marketplace.json      # Kimi Code marketplace 清单
+├── .kimi-plugin/marketplace.json      # Kimi Code marketplace 清单（单插件安装）
+├── kimi.plugin.json                   # Kimi Code 整包 manifest（GitHub 一键安装）
 ├── plugins/                           # 五个插件
 │   ├── adawing-invoker/
 │   ├── adawing-workflow/
@@ -98,7 +105,7 @@ adawing-plugins/
     └── adawing-security/
 ```
 
-每个插件提供 `plugins/<name>/.claude-plugin/plugin.json`（Claude Code）与 `plugins/<name>/.kimi-plugin/plugin.json`（Kimi Code）两份 manifest；OpenCode 直接使用 skill 目录，不需要清单。workflow 的 tier 和 phase 细则位于 skill 目录下的 `references/`，只按路由加载。
+每个插件提供 `plugins/<name>/.claude-plugin/plugin.json`（Claude Code）与 `plugins/<name>/.kimi-plugin/plugin.json`（Kimi Code）两份 manifest；根部的 `kimi.plugin.json` 聚合五个 skill 供 Kimi Code 从 GitHub 整包安装；OpenCode 直接使用 skill 目录，不需要清单。workflow 的 tier 和 phase 细则位于 skill 目录下的 `references/`，只按路由加载。
 
 ## 风格约定
 

@@ -1,0 +1,22 @@
+{
+  "name": "adawing",
+  "version": "2.3.0-prev",
+  "description": "AdaWing skill 插件集整包：adawing-invoker 判断纪律、adawing-workflow 执行路由、adawing-tdd 测试取证、adawing-security 安全规范、adawing-guidance AGENTS.md 生成器。",
+  "author": {
+    "name": "adaw"
+  },
+  "license": "MIT",
+  "skills": [
+    "./plugins/adawing-invoker/skills/",
+    "./plugins/adawing-workflow/skills/",
+    "./plugins/adawing-tdd/skills/",
+    "./plugins/adawing-security/skills/",
+    "./plugins/adawing-guidance/skills/"
+  ],
+  "interface": {
+    "displayName": "AdaWing Plugins",
+    "shortDescription": "判断纪律、执行路由、测试取证、安全规范与 AGENTS.md 生成器",
+    "longDescription": "AdaWing 出品的 skill 插件集整包：adawing-invoker 在编码任务前校准判断与歧义，adawing-workflow 按改动规模路由执行阶段，adawing-tdd 用测试复现 bug 并检测漂移，adawing-security 提供风险分级与不可逆门控，adawing-guidance 生成项目级 AGENTS.md。workflow 是 invoker 的单向下游补充，tdd 挂载于 workflow。",
+    "developerName": "AdaWing"
+  }
+}
