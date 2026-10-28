@@ -1,9 +1,9 @@
 {
   "name": "adawing-tdd",
-  "description": "用测试复现 bug、锁定验收、检测漂移：先红后绿取证，verify 做行为、回归、范围三层对账。挂载于 adawing-workflow，必须与 invoker、workflow 同装。",
-  "version": "1.1.0",
+  "description": "用测试复现 bug、锁定验收、检测偏差：先红后绿取证，verify 本轮重跑新测试与既有测试。挂载于 adawing-overstep，必须与其同装。",
+  "version": "2.0.0-prev",
   "dependencies": [
-    "adawing-workflow@adawing"
+    "adawing-overstep@adawing"
   ],
   "author": {
     "name": "adaw"

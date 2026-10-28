@@ -1,0 +1,16 @@
+{
+  "name": "adawing-overstep",
+  "version": "3.0.0-prev",
+  "description": "不越过用户请求的范围与授权：[SCOPE] 声明范围，验收歧义时 [CLARIFY]，需要批准或不可逆时 [CONFIRM]，编码按 direct / planned / staged 路由并遵守编码纪律，结束 [REPORT] 披露越界与偏离。",
+  "author": {
+    "name": "adaw"
+  },
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AdaWing Overstep",
+    "shortDescription": "不越过用户请求的范围与授权",
+    "longDescription": "要求 agent 在改动前用 [SCOPE] 声明本轮范围，只在验收歧义时澄清、在规模闸门或不可逆改动时等待批准；编码任务按改动规模加载 plan、preview、build、review、verify，并遵守最小实现、防御范围、注释纪律、沿用现有风格与精准修改；结束时用 [REPORT] 披露越界与偏离。",
+    "developerName": "AdaWing"
+  }
+}

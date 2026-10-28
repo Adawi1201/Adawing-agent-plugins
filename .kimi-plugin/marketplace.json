@@ -2,14 +2,9 @@
   "version": "2",
   "plugins": [
     {
-      "id": "adawing-invoker",
-      "displayName": "AdaWing Invoker",
-      "source": "./plugins/adawing-invoker"
-    },
-    {
-      "id": "adawing-workflow",
-      "displayName": "AdaWing Workflow",
-      "source": "./plugins/adawing-workflow"
+      "id": "adawing-overstep",
+      "displayName": "AdaWing Overstep",
+      "source": "./plugins/adawing-overstep"
     },
     {
       "id": "adawing-tdd",

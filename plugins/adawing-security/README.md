@@ -4,7 +4,7 @@ Agent **安全行为规范** skill。AI agent 在真实系统上执行命令、�
 
 ## 定位
 
-面向 AI coding agent（Claude Code、OpenCode、Kimi Code 等）的横切安全层。与决策/执行类 skill 互补：`adawing-invoker` 决定做不做，`adawing-workflow` 决定怎么做，本 skill 确保任何一步都不会造成静默的不可逆损害。
+面向 AI coding agent（Claude Code、OpenCode、Kimi Code 等）的横切安全层。与 `adawing-overstep` 互补：overstep 约束改动不越过用户请求的范围与授权，本 skill 确保任何一步都不会造成静默的不可逆损害。
 
 ## 触发条件
 

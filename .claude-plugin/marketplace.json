@@ -4,24 +4,19 @@
     "name": "adaw"
   },
   "metadata": {
-    "description": "AdaWing 出品的 skill 插件集：面向 AI coding agent 的决策门控、执行工作流、安全规范与项目提示词生成。invoker 可独立使用，workflow 作为其下游执行补充。",
-    "version": "2.3.0"
+    "description": "AdaWing 出品的 skill 插件集：面向 AI coding agent 的越界约束与执行工作流、测试取证、安全规范与项目提示词生成。",
+    "version": "3.0.0-prev"
   },
   "plugins": [
     {
-      "name": "adawing-invoker",
-      "source": "./plugins/adawing-invoker",
-      "description": "动手前的判断纪律：歧义门 + self / discuss 两档校准，默认不阻塞，只在用户消息确有多种解释时停下。"
-    },
-    {
-      "name": "adawing-workflow",
-      "source": "./plugins/adawing-workflow",
-      "description": "adawing-invoker 的下游执行补充：按规模路由 micro / single / full，并按需加载 plan、build、preview、review、verify。安装时自动依赖 adawing-invoker。"
+      "name": "adawing-overstep",
+      "source": "./plugins/adawing-overstep",
+      "description": "不越过用户请求的范围与授权：[SCOPE] 声明范围，验收歧义时澄清，规模闸门或不可逆时等待批准，编码按 direct / planned / staged 路由并遵守编码纪律，结束披露越界与偏离。"
     },
     {
       "name": "adawing-tdd",
       "source": "./plugins/adawing-tdd",
-      "description": "挂载于 workflow 的测试纪律：用红灯复现 bug，用断言与 git 对账检测行为、回归、范围漂移。安装时自动依赖 adawing-workflow。"
+      "description": "挂载于 overstep 的测试纪律：用红灯复现 bug，用断言与既有测试检测行为偏差与回归。安装时自动依赖 adawing-overstep。"
     },
     {
       "name": "adawing-security",

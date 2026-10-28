@@ -1,7 +1,7 @@
 {
   "name": "adawing-tdd",
-  "version": "1.1.0",
-  "description": "用测试复现 bug、锁定验收、检测漂移：先红后绿取证，verify 做行为、回归、范围三层对账。必须与 adawing-invoker、adawing-workflow 同装。",
+  "version": "2.0.0-prev",
+  "description": "用测试复现 bug、锁定验收、检测偏差：先红后绿取证，verify 本轮重跑新测试与既有测试。挂载于 adawing-overstep，必须与其同装。",
   "author": {
     "name": "adaw"
   },
@@ -9,8 +9,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AdaWing TDD",
-    "shortDescription": "用测试复现 bug、检测漂移",
-    "longDescription": "挂载于 adawing-workflow 的阶段：plan/gate 把验收条件转成断言，build 先红后绿复现 bug，verify 用测试与 git 对账检测行为、回归、范围三层漂移。只增加证据要求，不改变 invoker 与 workflow 的判断。",
+    "shortDescription": "用测试复现 bug、检测偏差",
+    "longDescription": "挂载于 adawing-overstep 的阶段：plan 与闸门把验收条件转成断言，build 先红后绿复现 bug，verify 本轮重跑新测试与受影响的既有测试，检测行为偏差与回归。只增加测试证据要求，不改变 overstep 的判断与闸门。",
     "developerName": "AdaWing"
   }
 }
