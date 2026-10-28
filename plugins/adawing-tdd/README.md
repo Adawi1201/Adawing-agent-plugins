@@ -18,15 +18,13 @@
 - 必须与 `adawing-invoker`、`adawing-workflow` 同装；只增加证据要求，不改变它们的路径判断、tier 与闸门
 - 核心插件不感知本插件：卸载后行为与未安装时完全一致
 
-## 强度
+## 适用范围
 
-在项目 `AGENTS.md` / `CLAUDE.md` 中加一行即可覆盖默认值，无需额外配置文件：
+- bug 修复：必须先取得红灯再修复；写不成测试时改用可重复的复现命令
+- single / full 的行为改动：默认先红后绿，跳过时写一行理由
+- micro 的非 bug 改动与纯文档 / 配置 / 样式：不要求测试
 
-```text
-adawing-tdd: bugfix=required feature=suggested micro=off
-```
-
-未设置时：bug 修复 `required`，single / full 行为改动 `suggested`，micro 非 bug 改动与纯文档 / 配置 `off`。
+无需任何配置。红灯必须在未改动的生产代码上观察到，先写实现再改坏代码得到的失败不算红灯。
 
 ## 结构
 
@@ -48,6 +46,8 @@ skills/adawing-tdd/
 Kimi Code 无安装依赖字段，请依次安装 `adawing-invoker`、`adawing-workflow`、`adawing-tdd`。OpenCode 将 `skills/adawing-tdd/` 软链到 `~/.config/opencode/skills/adawing-tdd/`。
 
 ## 版本
+
+**1.1.0**：取消可配置的测试要求分级，按任务类型固定适用范围；明确红灯必须先于实现，禁止先实现再改坏代码补红灯。
 
 **1.0.0**：首个版本。
 

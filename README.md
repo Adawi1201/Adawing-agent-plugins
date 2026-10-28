@@ -1,6 +1,6 @@
 # adawing-plugins
 
-AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与工程实践。当前发行版本为 `2.3.0-prev`（预览版，用于日常使用验证 adawing-tdd 与 invoker 修正），支持在 Claude Code 与 Kimi Code 中以 marketplace 托管五个插件，OpenCode 通过 skills 目录直接使用。
+AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与工程实践。当前发行版本为 `2.3.0`，支持在 Claude Code 与 Kimi Code 中以 marketplace 托管五个插件，OpenCode 通过 skills 目录直接使用。
 
 ## 插件
 

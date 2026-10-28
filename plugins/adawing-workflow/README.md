@@ -69,11 +69,11 @@ OpenCode 无需 manifest，将 `skills/adawing-workflow/` 复制或软链到 `~/
 
 ## 版本
 
-**2.3.0-prev**（预览）：
+**2.3.0**：
 
 - “改公共接口”包含签名不变、但对外可观察契约变化的情况，如返回内容或顺序、状态码、校验规则、持久化结果；文案和样式不算；
 - tier 理由中的调用方要写到对外入口（Controller、路由、页面）；
-- 与 invoker 2.3.0-prev、adawing-tdd 1.0.0 同步发布。
+- 与 invoker 2.3.0、adawing-tdd 1.1.0 同步发布。
 
 **2.2.0**：
 

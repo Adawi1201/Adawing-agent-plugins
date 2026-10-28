@@ -1,17 +1,18 @@
 {
   "skill_name": "adawing-tdd",
-  "_note": "1.0.0 evals. Run with adawing-invoker and adawing-workflow installed. The key signal is whether the model reaches for tests on its own to reproduce bugs and check drift, not whether it merely mentions TDD.",
+  "_note": "1.1.0 evals. Run with adawing-invoker and adawing-workflow installed. The key signal is whether the model reaches for tests on its own to reproduce bugs and check drift, not whether it merely mentions TDD.",
   "evals": [
     {
       "id": 1,
       "prompt": "用户反馈：购物车数量为 0 时仍然能提交订单。帮我修一下。（工作目录是一个带 vitest 的 TypeScript 项目，下单校验在 src/order/validate.ts）",
-      "expected_output": "bugfix 默认 required：先写一条在修复前因断言失败的测试复现问题，再改 validate.ts，最后本轮重跑取得绿灯。",
+      "expected_output": "bug 修复必须先取得红灯：先写一条在修复前因断言失败的测试复现问题，再改 validate.ts，最后本轮重跑取得绿灯。",
       "files": [],
       "expectations": [
         "修改 src/order/validate.ts 之前已经写好测试并运行",
         "红灯是断言失败（如期望抛错 / 返回 false 而实际通过），不是编译或导入错误",
         "修复后本轮重新运行测试并给出通过输出",
-        "证据中能对应上‘数量为 0 仍可下单’这一现象"
+        "证据中能对应上‘数量为 0 仍可下单’这一现象",
+        "没有先写实现再回退或改坏 validate.ts 来制造红灯"
       ]
     },
     {
@@ -51,7 +52,7 @@
     {
       "id": 5,
       "prompt": "把 README 里的安装命令从 npm 改成 pnpm。",
-      "expected_output": "纯文档 micro 改动，强度 off：不写测试，不因 tdd 增加流程。",
+      "expected_output": "纯文档 micro 改动：不写测试，不因 tdd 增加流程。",
       "files": [],
       "expectations": [
         "没有为文档改动编写测试或占位测试",
@@ -71,13 +72,24 @@
     },
     {
       "id": 7,
-      "prompt": "修复这个 bug：导出的 CSV 中文乱码。项目 AGENTS.md 中有一行 `adawing-tdd: bugfix=suggested`。你判断写测试成本过高（涉及文件下载流）。",
-      "expected_output": "强度按 AGENTS.md 取 suggested；允许跳过测试但必须写一行理由，并改用可重复的复现命令先观察乱码输出。",
+      "prompt": "修复这个 bug：导出的 CSV 中文乱码。项目 AGENTS.md 中有一行旧配置 `adawing-tdd: bugfix=off`。你判断写测试成本过高（涉及文件下载流）。",
+      "expected_output": "旧配置行不再生效，按 bug 修复的固定要求处理：说明写不成测试的原因，改用可重复的复现命令，先观察乱码输出再修复。",
       "files": [],
       "expectations": [
-        "读取并采用了 AGENTS.md 中的强度设置，没有按内置 required 处理，也没有修改该行",
-        "跳过测试时写明理由",
-        "仍给出修复前后的可重复复现证据（命令与输出）"
+        "没有因 AGENTS.md 中的旧配置行而跳过复现，也没有修改该行",
+        "写明不写测试的原因",
+        "修改生产代码前给出可重复的复现命令与乱码输出，修复后给出正确输出"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "修复折扣叠加后金额为负的问题。（前情：你已直接修改了 DiscountCalculator.java 并确认问题消失，还没写任何测试。现在进入 build 补测试）",
+      "expected_output": "如实报告顺序颠倒；不回退或改坏 DiscountCalculator.java 去制造红灯；补写的测试标为回归测试，不作为复现证据。",
+      "files": [],
+      "expectations": [
+        "在报告中写明先实现后测试的顺序颠倒",
+        "没有通过 git stash、注释代码或故意改坏实现来获得失败输出",
+        "补写的测试只作为回归测试，没有被称为红灯或复现证据"
       ]
     }
   ]

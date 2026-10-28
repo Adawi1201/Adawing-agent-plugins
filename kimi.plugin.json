@@ -1,6 +1,6 @@
 {
   "name": "adawing",
-  "version": "2.3.0-prev",
+  "version": "2.3.0",
   "description": "AdaWing skill 插件集整包：adawing-invoker 判断纪律、adawing-workflow 执行路由、adawing-tdd 测试取证、adawing-security 安全规范、adawing-guidance AGENTS.md 生成器。",
   "author": {
     "name": "adaw"
