@@ -26,7 +26,7 @@
     {
       "name": "adawing-guidance",
       "source": "./plugins/adawing-guidance",
-      "description": "AGENTS.md 初始化生成器：扫描项目产出缓存友好、稳定度排序、无冗余的项目级提示词。"
+      "description": "项目级 AGENTS.md 的初始化、审计与沉淀：只写推断不出来的内容并实际验证命令，审计失效与冗余条目，把真实发生的项目特有错误整理成待确认的规则。"
     }
   ]
 }

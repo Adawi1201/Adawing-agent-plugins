@@ -1,0 +1,109 @@
+{
+  "skill_name": "adawing-guidance",
+  "_note": "2.0.0-prev evals, first eval set for this skill. Not yet run. Cases 1-4 check init and audit output; 5-9 check the capture criteria. For effectiveness, also compare agents on the same tasks with and without the generated AGENTS.md: count failed command attempts before the first correct one, project-convention violations, and terminology mistakes.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "给这个项目生成 AGENTS.md。（工作目录是一个 pnpm + Vite + Vitest 前端项目，package.json 有 test:unit 与 test:e2e 两个 script，test:e2e 需要先启动本地 mock 服务；项目根目录没有 AGENTS.md 或 CLAUDE.md）",
+      "expected_output": "调研后实际运行单测命令；AGENTS.md 写明 test:unit 与 e2e 的前提，不写文件清单和通用规则，不超过 200 行。",
+      "files": [],
+      "expectations": [
+        "实际运行了 test:unit（或最小范围的测试）并在交付时说明验证结果",
+        "命令段写明 e2e 需要先启动 mock 服务，或标注为未验证并询问",
+        "没有通用 agent 行为规则（如“需求不清先提问”“未验证不声称完成”）",
+        "没有文件或组件全量清单、时间戳、项目宣传",
+        "没有新建 CLAUDE.md"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "初始化 agent 项目配置。（工作目录是 Spring Boot 项目，已有一份 80 行的 CLAUDE.md，内容包括构建命令和团队约定，没有 AGENTS.md）",
+      "expected_output": "生成 AGENTS.md，并在 CLAUDE.md 顶部加入 @AGENTS.md 导入；原有 CLAUDE.md 内容先给出审计清单与迁移建议，确认后再改。",
+      "files": [],
+      "expectations": [
+        "说明存在 CLAUDE.md 时 Claude Code 默认不读 AGENTS.md",
+        "给出在 CLAUDE.md 中加入 @AGENTS.md 的方案",
+        "没有直接覆盖或删除原 CLAUDE.md 内容，修改前先给出改动清单"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "帮我检查一下 AGENTS.md 还有没有问题。（工作目录中 AGENTS.md 有 260 行，其中引用了已删除的 scripts/deploy.sh、package.json 中不存在的 npm run lint:fix，包含“2026-03 迁移进行中”的进度说明，以及 ESLint 已强制的分号规则）",
+      "expected_output": "运行 audit-agents.mjs，逐条报告失效路径与命令、易变内容、超长和工具已强制的规则；给出建议改动，确认前不修改文件。",
+      "files": [],
+      "expectations": [
+        "运行了 audit-agents.mjs 或等价检查，报告 scripts/deploy.sh 与 lint:fix 失效",
+        "指出迁移进度属于易变内容、分号规则已由 ESLint 强制",
+        "指出超过 200 行并给出精简建议与预计行数",
+        "确认前没有修改 AGENTS.md"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "给这个 monorepo 写 AGENTS.md。（工作目录是 pnpm workspace，含 apps/web（Next.js）与 services/billing（Go），两者的构建、测试命令和代码约定完全不同）",
+      "expected_output": "根 AGENTS.md 只放全局内容，web 与 billing 的命令和约定分别放到各自目录的 AGENTS.md。",
+      "files": [],
+      "expectations": [
+        "根文件没有混入 Next.js 或 Go 的模块特有约定",
+        "apps/web 与 services/billing 各有自己的 AGENTS.md 或给出了该方案",
+        "每个文件都不超过 200 行"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "不对，这个项目的单测要用 pnpm test:unit，pnpm test 会连 e2e，跑不起来的。（前情：你刚才在本项目中运行 pnpm test 失败；AGENTS.md 的命令段第 12 行写着 `pnpm test`）",
+      "expected_output": "识别为可沉淀的命令陷阱：任务结束时给出候选，指出与第 12 行冲突并建议改写该行，确认后才写入。",
+      "files": [],
+      "expectations": [
+        "给出沉淀候选，说明满足项目特有、推断不出、长期成立、会再遇到",
+        "指出 AGENTS.md 第 12 行与之冲突，建议改写而不是追加一条",
+        "候选规则写约束本身，没有写“之前失败过”之类的经过",
+        "确认前没有修改 AGENTS.md"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "这次金额舍入用 HALF_UP 就行，记一下。（前情：你在修订单金额计算，项目中其他金额计算使用 HALF_EVEN）",
+      "expected_output": "判断为本次任务的决定，不固化为全局规则；说明原因，并指出与项目现有 HALF_EVEN 的差异，询问是否真的要作为全局约定。",
+      "files": [],
+      "expectations": [
+        "没有直接把“舍入用 HALF_UP”写入 AGENTS.md",
+        "说明这是本次任务的取舍，固化会与项目其他计算冲突",
+        "询问用户是否要作为全局约定，或建议记录在代码与提交信息中"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "以后别写那么多 try-catch 了，记下来。（前情：你在本项目的 Service 中加了多处用户认为不必要的 try-catch；项目没有关于异常处理的特殊约定）",
+      "expected_output": "这是模型的通用问题，不是项目特有约定，不沉淀到 AGENTS.md；说明原因。若项目确有异常处理约定（如统一由全局处理器转换），才写成项目约定。",
+      "files": [],
+      "expectations": [
+        "说明这属于通用编码问题，不作为项目特有规则沉淀",
+        "检查了项目是否存在统一异常处理机制，并据此判断",
+        "没有直接追加“不要写过多 try-catch”到 AGENTS.md"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "记一下：编译前好像得先 mvn clean，不然会报错。（前情：本次编译报错后执行 mvn clean 再编译通过，根因未查明）",
+      "expected_output": "根因未确认，不固化为规则；建议先查明原因（如生成代码残留、注解处理器缓存），查清后再判断是否沉淀。",
+      "files": [],
+      "expectations": [
+        "指出根因未确认，不应把猜测写成规则",
+        "给出查明根因的具体方向或直接排查",
+        "没有把“先 mvn clean”写入 AGENTS.md"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "记住：src/generated/ 下的文件是 protoc 生成的，不能手改，要改 proto/ 下的定义再跑 make gen。",
+      "expected_output": "满足四条件的禁区规则：给出候选（禁区层），写约束与正确做法，确认后写入；可建议用工具层阻止编辑。",
+      "files": [],
+      "expectations": [
+        "候选规则放在禁区层，包含不能手改与正确做法（改 proto/ 后运行 make gen）",
+        "确认了 make gen 目标存在，或标注未验证",
+        "确认后才写入；可附带建议用 permissions.deny 或 hook 强制"
+      ]
+    }
+  ]
+}

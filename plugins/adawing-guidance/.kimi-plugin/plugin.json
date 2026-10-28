@@ -1,7 +1,7 @@
 {
   "name": "adawing-guidance",
-  "version": "1.1.0",
-  "description": "AGENTS.md 初始化生成器：扫描项目产出缓存友好、稳定度排序、无冗余的项目级提示词。",
+  "version": "2.0.0-prev",
+  "description": "项目级 AGENTS.md 的初始化、审计与沉淀：只写推断不出来的内容并实际验证命令，审计失效与冗余条目，把真实发生的项目特有错误整理成待确认的规则。",
   "author": {
     "name": "adaw"
   },
@@ -9,8 +9,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AdaWing Guidance",
-    "shortDescription": "生成项目级 AGENTS.md 提示词",
-    "longDescription": "扫描项目结构、技术栈与命令，为编码 agent 生成或更新缓存友好、稳定度排序、无冗余的 AGENTS.md 项目级提示词。",
+    "shortDescription": "初始化、审计与沉淀项目级 AGENTS.md",
+    "longDescription": "为编码 agent 维护项目级 AGENTS.md：初始化时只写仓库推断不出来、长期成立的信息并实际验证命令；审计时用脚本找出失效路径与命令、易变内容和超长，再逐条检查冗余与冲突；沉淀时把任务中真实发生的项目特有错误整理成待用户确认的一行规则。",
     "developerName": "AdaWing"
   }
 }

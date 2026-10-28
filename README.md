@@ -9,7 +9,7 @@ AdaWing 出品的 skill 插件集，面向 AI coding agent 的治理、安全与
 | [`adawing-overstep`](plugins/adawing-overstep) | **越界约束与执行路由**（SCOPE / CLARIFY / CONFIRM / REPORT + direct / planned / staged + 编码纪律） | 写代码、改文件、执行会改变状态的命令 |
 | [`adawing-tdd`](plugins/adawing-tdd) | overstep 的可插拔**测试纪律**（红灯复现 bug + 行为偏差与回归检查） | 修 bug、改行为时，在 plan / build / verify 阶段追加证据 |
 | [`adawing-security`](plugins/adawing-security) | Agent **安全行为规范**（三色风险分级 + 门控） | 涉及命令/删除/部署/密钥/生产环境 |
-| [`adawing-guidance`](plugins/adawing-guidance) | **AGENTS.md 生成器**（项目级提示词） | 需要初始化 agent 项目配置 |
+| [`adawing-guidance`](plugins/adawing-guidance) | 项目级 **AGENTS.md 维护**（初始化 + 审计 + 沉淀） | 初始化 agent 项目配置、检查 AGENTS.md、把项目特有的纠正记下来 |
 
 overstep 由原 `adawing-invoker` 与 `adawing-workflow` 合并而来：入口只触发一次，歧义判断与规模定档在同一份 `[SCOPE]` 中完成，编码纪律只在编码任务中加载。tdd 挂载于 overstep，可随时插拔且 overstep 不感知它；overstep、security 与 guidance 都可单装。
 

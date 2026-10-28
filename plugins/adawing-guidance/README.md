@@ -1,35 +1,42 @@
 # adawing-guidance
 
-**AGENTS.md 初始化生成器** skill。扫描项目结构、技术栈与命令，产出一份缓存友好、稳定度排序、无冗余的项目级 AGENTS.md（agent 项目提示词 / 固定前缀）。
+项目级 **AGENTS.md** 的初始化、审计与沉淀。核心原则：只写模型从仓库里推断不出来、长期成立、几乎每个任务都用得上的信息；能由工具强制的规则交给工具。
 
-## 定位
+## 解决什么
 
-面向需要为编码 agent（Claude Code / OpenCode / Kimi Code / Cursor 等）建立项目级提示词的场景。核心原则：**只写模型从代码里推断不出来、又不会频繁变化、且几乎每个任务都用得上的信息。**
+| 问题 | 做法 |
+|---|---|
+| 初始化写进去的内容大多是模型自己能读到的，效果感知不到 | 只写推断不出来的；命令实际运行验证，重点写看着对、实际不对的命令和运行前提 |
+| 文件写完就不再维护，引用的命令和路径逐渐失效 | 审计模式：`audit-agents.mjs` 找出失效路径与命令、易变内容、超长，再逐条检查冗余与冲突 |
+| 最有价值的“这个项目里实际踩过的坑”在初始化时拿不到 | 沉淀模式：任务中真实发生的项目特有错误，整理成待确认的一行规则 |
+| 写入通用规则，与 agent 或已安装 skill 冲突 | 第 5 层只放项目特有的行为约束，通用 agent 规则列入负面清单 |
+| Claude Code 在存在 CLAUDE.md 时不读 AGENTS.md | 文件落点规则：以 AGENTS.md 为正文，已有 CLAUDE.md 时加 `@AGENTS.md` 导入 |
 
-## 触发条件
+## 三种模式
 
-当用户要求"生成 AGENTS.md"、"初始化 agent 配置"、"写项目级提示词"，为编码 agent 创建项目说明文件，或提到 agents.md、项目级 prompt、固定前缀时。
+| 模式 | 触发 | 产出 |
+|---|---|---|
+| 初始化 | “生成 AGENTS.md”“初始化 agent 配置” | AGENTS.md，不超过 200 行，没有下限 |
+| 审计 | “检查 / 精简 AGENTS.md”，或初始化时发现已存在 | 问题清单与建议改动，确认后再改 |
+| 沉淀 | 用户纠正了项目特有的做法，或说“记下来” | 一条待确认的候选规则 |
 
-## 核心机制
+沉淀判据在 `references/capture.md`：四条同时满足才沉淀（项目特有、推断不出来、长期成立、会再遇到）；本次任务的决定、临时指令、当前状态、根因未确认的经验、工具已强制的规则、模型的通用缺陷、错误经过和个人偏好都不固化。
 
-四步流程：
-
-1. **调研项目**（只读）：从依赖清单、构建脚本、CI 配置、目录结构、既有约定收集信息，每项都要有证据来源，禁止编造。
-2. **组织内容**：按稳定度从高到低排七层（稳定度 = 缓存命中友好度）。
-3. **套用模板生成**：以 `assets/AGENTS.template.md` 为骨架替换占位符，控制在 100～300 行。
-4. **自检与交付**：逐条验收（每条内容都要通过"没有它模型会不会犯错"的测试），已存在则走增量更新。
-
-## 目录结构
+## 结构
 
 ```
-adawing-guidance/
-├── .claude-plugin/plugin.json
-├── README.md                         # 本文件
-└── skills/adawing-guidance/
-    ├── SKILL.md                      # skill 主文档
-    ├── assets/AGENTS.template.md     # AGENTS.md 骨架模板
-    └── references/content-guide.md   # 内容取舍标准与负面清单
+skills/adawing-guidance/
+├── SKILL.md                       # 三种模式、文件落点、初始化流程、硬规则
+├── assets/AGENTS.template.md      # AGENTS.md 骨架模板
+├── references/
+│   ├── content-guide.md           # 七层内容的取舍标准、负面清单与写法
+│   ├── audit.md                   # 审计模式
+│   └── capture.md                 # 沉淀模式：什么该沉淀、什么不该固化
+├── scripts/audit-agents.mjs       # 失效路径与命令、易变内容、超长、CLAUDE.md 遮蔽检查（只读，零依赖）
+└── evals/evals.json
 ```
+
+`audit-agents.mjs` 需要 Node.js 18+，在仓库根目录运行。退出码 0 表示无发现，1 表示有发现，2 表示参数或读取错误。
 
 ## 安装
 
@@ -45,6 +52,21 @@ adawing-guidance/
 Kimi Code 使用仓库根部的 `.kimi-plugin/marketplace.json`（`/plugins marketplace <路径>`），或直接 `/plugins install <本插件目录>`。
 
 OpenCode 无需 manifest，将 `skills/adawing-guidance/` 复制或软链到 `~/.config/opencode/skills/adawing-guidance/`；OpenCode 也读取 `~/.claude/skills/`，已按上文手动安装的无须重复。
+
+## 版本
+
+**2.0.0-prev**（预览，随整包 3.0.0-prev 发布）：
+
+- 新增审计与沉淀两种模式，以及 `audit-agents.mjs`；
+- 初始化要求实际运行测试与检查命令；
+- 体量改为不超过 200 行、没有下限（依据 Claude Code 文档的建议上限）；
+- 去掉缓存排序论证，七层改为从全局到局部排列；
+- 模板“工作方式”改为“项目约束”，只放项目特有的行为约束；通用 agent 规则与工具已强制的规则列入负面清单；
+- 规则允许在同一行附一句原因；
+- 新增文件落点规则：以 AGENTS.md 为正文，已有 CLAUDE.md 时用 `@AGENTS.md` 导入；
+- 首次提供 evals，尚未运行。
+
+**1.1.0**：此前的发布版本，未单独记录变更。
 
 ## License
 
