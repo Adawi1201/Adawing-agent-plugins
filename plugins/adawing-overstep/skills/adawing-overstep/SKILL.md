@@ -37,7 +37,12 @@ description: 任何涉及写代码、改文件、改配置、执行会改变状�
 “无”是有效结论，留空不是。取舍理由使用可核验约束：`文件路径:行号`、框架报错、版本限制、用户原话。被排除的路径更简单时，理由必须是当前需求的真实缺口，不援引未来可能性。
 
 ```text
-[SCOPE] 请求：订单列表改按支付时间查询 | 文件：OrderService.java, OrderMapper.xml, OrderServiceTest.java | 规模：planned（跨 Service 与 Mapper；调用方 OrderController#list） | 取舍：无实质取舍 | 下一步：写 plan
+[SCOPE] 
+请求：订单列表改按支付时间查询
+文件：OrderService.java, OrderMapper.xml, OrderServiceTest.java
+规模：planned（跨 Service 与 Mapper；调用方 OrderController#list）
+取舍：无实质取舍
+下一步：写 plan
 ```
 
 输出后直接执行下一步，不停下等待；只有命中 `[CLARIFY]` 或 `[CONFIRM]` 才停。偏好类取舍可以提问，但要同时给出默认动作，没有回复时按默认动作继续。
@@ -93,7 +98,10 @@ description: 任何涉及写代码、改文件、改配置、执行会改变状�
 - **未完成或偏离**：用户要求中没做到的、做法与指令不一致的、你对指令做了解释的，逐项列出
 
 ```text
-[REPORT] 验证：mvn test -Dtest=OrderServiceTest → 12/12 | 越界：无 | 未完成或偏离：无
+[REPORT] 
+验证：mvn test -Dtest=OrderServiceTest → 12/12 
+越界：无
+未完成或偏离：无
 ```
 
 有越界或偏离项时，请用户确认保留还是撤回，并停在这里；两项都为“无”时直接结束。
